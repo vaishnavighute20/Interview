@@ -1,0 +1,25 @@
+package com.app.code;
+
+public class FindSubString {
+
+	public static void main(String[] args) {
+      String mainString="Hello this is simple example";
+      String subString="simple";
+      
+      // position of subString
+      int position =mainString.indexOf(subString);
+      
+      //check if subString is found
+      if(position!=-1)
+      {
+          System.out.println("Substring '" + subString + "' found at position: " + position);
+
+      }
+      else
+      {
+          System.out.println("Substring '" + subString + "' not found");
+
+      }
+	}
+
+}

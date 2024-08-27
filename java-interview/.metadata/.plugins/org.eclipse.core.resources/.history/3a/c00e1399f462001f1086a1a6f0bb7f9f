@@ -1,0 +1,47 @@
+package com.app.pattern;
+
+public class Diamond {
+
+	public static void main(String[] args) {
+ // upper part of diamond ie hill
+		int n=5;
+		for(int i=1;i<=n;i++)
+		{// print spaces decreasing
+			for (int j=i;j<n;j++)
+			{
+				System.out.print(" ");
+			}
+			//print * increasing
+			for (int j=1;j<=i;j++)
+			{
+				System.out.print("*");
+			}//print * increasing skip the first one
+			//j<i
+			for (int j=1;j<i;j++)
+			{
+				System.out.print("*");
+			}
+			System.out.println();
+		}
+		// lower part of diamond reverse hill
+		for(int i=1;i<n;i++)
+		{
+			for (int j=1;j<=i;j++)
+			{
+				System.out.print(" ");
+			}
+
+			for (int j=i;j<n;j++)
+			{
+				System.out.print("*");
+			}
+			for (int j=i;j<=n;j++)
+			{
+				System.out.print("*");
+			}
+			System.out.println();
+		}
+		
+	}
+
+}

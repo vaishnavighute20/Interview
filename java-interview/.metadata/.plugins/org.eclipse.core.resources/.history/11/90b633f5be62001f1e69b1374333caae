@@ -1,0 +1,9 @@
+package com.app.pattern;
+
+public class triangke {
+
+	public static void main(String[] args) {
+ 
+	}
+
+}

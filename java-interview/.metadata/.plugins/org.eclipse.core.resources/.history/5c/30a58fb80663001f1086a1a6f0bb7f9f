@@ -1,0 +1,16 @@
+package com.app.code;
+// coupa coding round
+public class FindDuplicateInString {
+
+	public static void main(String[] args) {
+		String input ="abcadcefe";
+		// reverse the string
+		System.out.println("Reversed String :"+new StringBuilder(input).reverse());
+        // Count and display duplicate characters
+        int[]count=new int[256];// ascii size
+        
+ 
+		
+	}
+
+}
