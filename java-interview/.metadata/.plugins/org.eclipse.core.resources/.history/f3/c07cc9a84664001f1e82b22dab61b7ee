@@ -1,0 +1,26 @@
+package com.app.code;
+
+public class PrimeNumber {
+// naural number >1
+// which has only two factor 1 and itself
+	public static void main(String[] args) {
+     int num=3;
+     int count=0;
+     if(num>1)
+     {
+    	 for(int i=1;i<=num;i++)
+    	 {
+    		if(num%i==0)
+    		{
+    			count++;
+    		}
+    	 }
+     }
+     else
+     {
+    	 System.out.println("not prime");
+     }
+		
+	}
+
+}

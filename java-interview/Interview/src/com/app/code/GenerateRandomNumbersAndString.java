@@ -1,0 +1,25 @@
+package com.app.code;
+
+import java.util.Random;
+
+public class GenerateRandomNumbersAndString {
+
+	public static void main(String[] args) {
+      
+		// Approach1 - Random class
+		 Random rand=new Random();
+	     int rand_int=rand.nextInt(1000);
+	     System.out.println(rand_int);
+	     double rand_dbl= rand.nextDouble();//
+	     System.out.println(rand_dbl);
+
+	     //Approach2 math class
+		//by default we can generate decimal numbers
+		  System.out.println(Math.random());
+		
+		//Approach3  Apache commons-lang Api
+		  // for strings
+		 
+	}
+
+}

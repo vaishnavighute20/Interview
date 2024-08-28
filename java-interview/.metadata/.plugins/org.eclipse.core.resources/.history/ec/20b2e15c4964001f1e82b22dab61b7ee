@@ -1,0 +1,11 @@
+package com.app.code;
+
+public class GenerateRandomNumbersAndString {
+
+	public static void main(String[] args) {
+      
+		
+
+	}
+
+}

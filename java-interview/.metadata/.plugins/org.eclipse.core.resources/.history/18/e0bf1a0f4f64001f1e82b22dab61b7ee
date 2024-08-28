@@ -1,0 +1,15 @@
+package com.app.code;
+
+import java.util.Random;
+
+public class GenerateRandomNumbersAndString {
+
+	public static void main(String[] args) {
+      
+		// Approach1 - Random class
+		 Random rand=new Random();
+	    int rand_int=rand.nextInt(1000);
+	    System.out.println(rand_int);
+	}
+
+}

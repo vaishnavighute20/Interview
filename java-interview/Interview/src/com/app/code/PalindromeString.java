@@ -23,7 +23,6 @@ public class PalindromeString {
 		else
 		{
 			System.out.println(orgstr+ " is not a palindrome String");
-
 		}
 		
        sc.close();
