@@ -1,0 +1,36 @@
+package com.app.pattern;
+
+public class RightSidedTriangle {
+// decreasing triangle of space and increasing *
+	public static void main(String[] args) {
+ 
+		int n=5;
+		for(int i=1;i<=n;i++)
+		{
+			// print spaces
+			for(int j=i;j<=n;j++)
+			{// leave one space " "
+				System.out.print(" ");
+			}
+			// for printing *
+			for(int j=1;j<=i;j++)
+			{
+				System.out.print("*");
+			}
+			// for next line
+			System.out.println();
+/*
+ // decreasing triangle of space and increasing *
+
+     *
+    **
+   ***
+  ****
+ *****
+
+ */
+		}
+		
+	}
+
+}
