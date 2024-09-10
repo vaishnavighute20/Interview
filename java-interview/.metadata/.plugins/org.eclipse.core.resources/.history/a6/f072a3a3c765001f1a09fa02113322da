@@ -1,0 +1,9 @@
+package com.app.code;
+
+public class CheckArraysEquals {
+
+	public static void main(String[] args) {
+ 
+	}
+
+}

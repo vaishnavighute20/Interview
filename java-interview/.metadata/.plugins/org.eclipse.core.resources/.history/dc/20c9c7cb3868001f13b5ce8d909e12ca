@@ -1,0 +1,25 @@
+package com.app.code;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class WriteDataIntoTextFile {
+
+    public static void main(String[] args) {
+
+        // Use try-with-resources to handle resource management and exceptions
+    	// create sequence.txt
+        try (FileWriter fw = new FileWriter("D:\\sequence.txt");
+             BufferedWriter bw = new BufferedWriter(fw)) {
+             
+            bw.write("Hello, my name is Vaishnavi Ghute");
+            System.out.println("Finished");
+            // check in sequence.txt
+
+        } catch (IOException e) {
+            // Print exception details if an error occurs
+            e.printStackTrace();
+        }
+    }
+}

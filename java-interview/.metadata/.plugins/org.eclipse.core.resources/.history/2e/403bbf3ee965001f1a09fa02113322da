@@ -1,0 +1,28 @@
+package com.app.code;
+
+public class DuplicateElementsInArray {
+
+	public static void main(String[] args) {
+		String arr[]= {"java","c","c++","python","ruby",".net"};
+		
+		// Approach1
+		boolean flag=false;
+		for(int i=0;i<arr.length;i++)
+		{
+			for(int j=i+1;j<arr.length;j++)
+			{
+				if(arr[i]==arr[j])
+				{
+					System.out.println("duplicate elements : "+arr[i]);
+                    flag=true;
+				}
+			}
+		}
+         if(flag==false)
+	
+	{
+		System.out.println("duplicate elements not found");
+
+	}
+	}
+}

@@ -1,0 +1,31 @@
+package com.app.code;
+
+public class MaxAndMinElementsInArray {
+
+	public static void main(String[] args) {
+		int a[]= {50,30,40,10,60};
+		int max=a[0];
+		for(int i=1;i<a.length;i++)
+		{
+			if(a[i]>max)//30>50 40>50  20>50 60>50
+			{         //    f      f      f     t
+				max=a[i];//50 60
+			}
+		}
+		
+		System.out.println("max element in array is: "+max);
+
+		int min=a[0];
+		
+		for(int i=1;i<a.length;i++)
+		{
+			if(a[i]<min)
+			{                              
+				min=a[i];
+			}
+		}
+		System.out.println("min element in array is: "+min);
+
+	}
+
+}
