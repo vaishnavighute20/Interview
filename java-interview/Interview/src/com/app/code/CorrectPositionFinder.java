@@ -3,7 +3,7 @@ package com.app.code;
 // coupa company code asked
 public class CorrectPositionFinder {
 
-	public static void main(String[] args) {
+	 public static void main(String[] args) {
      int[] numbers= {5,2,3,6,1};
      System.out.println("Digits in the Correct Position:");
    //  boolean found=false;
@@ -14,7 +14,7 @@ public class CorrectPositionFinder {
     		//Index is 0-based ,so we check i+1 
     	     System.out.println(numbers[i]+ " ");
     	  //   found=true;
-    	 }
+    	 }	
      }
 //     if (!found) {
 //         System.out.println("None");

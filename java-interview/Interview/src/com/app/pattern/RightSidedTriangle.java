@@ -10,13 +10,9 @@ public class RightSidedTriangle {
 			// print spaces
 			for(int j=i;j<=n;j++)
 			{// leave one space " "
-				System.out.print(" ");
-			}
-			// for printing *
-			for(int j=1;j<=i;j++)
-			{
 				System.out.print("*");
 			}
+			 
 			// for next line
 			System.out.println();
 /*

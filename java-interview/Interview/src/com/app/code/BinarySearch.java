@@ -10,8 +10,8 @@ public class BinarySearch {
        int a[]= {1,2,3,4,5,6,7,8,9,10};
        boolean flag=false;
        int  key=10;
-       int l=0;
-       int h=a.length -1;
+       int l=0;// first
+       int h=a.length -1;// last
        while(l<=h)
        {
     	   int m=(l+h)/2;

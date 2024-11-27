@@ -1,398 +1,406 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Spring]]></title><description><![CDATA[Level up your Java code and explore what Spring can do for you.]]></description><link>https://spring.io</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 01 Sep 2024 00:35:47 GMT</lastBuildDate><item><title><![CDATA[A Bootiful Podcast: Tanzu's Cloud and Spring legend Chris Sterling]]></title><link>https://spring.io/blog/2024/08/30/a-bootiful-podcast-tanzus-cloud-and-spring-legend-chris-sterling</link><guid isPermaLink="true">https://spring.io/blog/2024/08/30/a-bootiful-podcast-tanzus-cloud-and-spring-legend-chris-sterling</guid><dc:creator><![CDATA[Josh Long]]></dc:creator><pubDate>Fri, 30 Aug 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Hi, Spring fans! In this installment I talk to the Tanzu legend Chris Sterling, who works on making Spring an even more valuable part of a platform. (This episode was recorded live at the &lt;a href=&quot;https://springone.io&quot;&gt;epic SpringOne&lt;/a&gt; 2024 event!)&lt;/p&gt;
-&lt;iframe title=&quot;Tanzu’s Cloud and Spring legend Chris Sterling&quot; allowtransparency=&quot;true&quot; height=&quot;150&quot; width=&quot;100%&quot; style=&quot;border: none; min-width: min(100%, 430px);height:150px;&quot; scrolling=&quot;no&quot; data-name=&quot;pb-iframe-player&quot; src=&quot;https://www.podbean.com/player-v2/?i=ia2p5-16ba6bb-pb&amp;from=pb6admin&amp;share=1&amp;download=1&amp;rtl=0&amp;fonts=Arial&amp;skin=1&amp;font-color=&amp;logo_link=episode_page&amp;btn-skin=7&quot; loading=&quot;lazy&quot;&gt;&lt;/iframe&gt;</content:encoded></item><item><title><![CDATA[Spring Boot CDS support and Project Leyden anticipation]]></title><link>https://spring.io/blog/2024/08/29/spring-boot-cds-support-and-project-leyden-anticipation</link><guid isPermaLink="true">https://spring.io/blog/2024/08/29/spring-boot-cds-support-and-project-leyden-anticipation</guid><dc:creator><![CDATA[Sébastien Deleuze]]></dc:creator><pubDate>Thu, 29 Aug 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;How can Spring Boot developers improve the runtime efficiency of their applications with minimal constraints in order to enjoy those benefits on most applications? The answer is the CDS support introduced by Spring Boot 3.3 which allows you to start your Spring Boot applications faster and consume less memory. It is based on &lt;a href=&quot;https://spring.io/blog/2023/12/04/cds-with-spring-framework-6-1&quot;&gt;the foundation introduced by Spring Framework 6.1&lt;/a&gt; that I presented a few months ago.&lt;/p&gt;
-&lt;p&gt;A key point is that this new CDS support provides a different value proposition compared to the &lt;a href=&quot;https://docs.spring.io/spring-boot/reference/packaging/native-image/introducing-graalvm-native-images.html&quot;&gt;GraalVM native image support&lt;/a&gt;: the improvements you get with CDS are less dramatic than with native images on startup time for example, but they are still very significant while you can continue to use your regular JVM with very few side effects.&lt;/p&gt;
-&lt;p&gt;Spring Boot supports both CDS and GraalVM native images in a production-ready fashion and gives you the choice depending on your context and opinions.&lt;/p&gt;
-&lt;h2 id=&quot;cds-a-hidden-gem-in-the-jvm&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#cds-a-hidden-gem-in-the-jvm&quot; aria-label=&quot;cds a hidden gem in the jvm permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;CDS, a hidden gem in the JVM&lt;/h2&gt;
-&lt;p&gt;CDS stands for &lt;a href=&quot;https://docs.oracle.com/en/java/javase/21/vm/class-data-sharing.html&quot;&gt;Class Data Sharing&lt;/a&gt;, it is a mature technology already available and used in most JVM, but so far not at its full potential. To simplify, you are probably already using CDS without knowing it but only for optimizing JDK classes loading, while the classes of your application or libraries probably do not take advantage of it. To unlock that, it is required to perform a training run of your application.&lt;/p&gt;
-&lt;p&gt;You also need to fulfill a set of constraints that are easy to break without a dedicated support like Spring Boot one:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;The very same JVM must be used.&lt;/li&gt;
-&lt;li&gt;The classpath must be specified as a list of JARs, and avoid the usage of directories, &lt;code&gt;*&lt;/code&gt; wildcard characters and nested JARs.&lt;/li&gt;
-&lt;li&gt;The timestamps of the JARs must be preserved.&lt;/li&gt;
-&lt;li&gt;When using the CDS archive for the production run, the classpath must be the same as the one used to create the archive, in the same order. Additional JARs or directories can be specified at the end (but won’t be cached).&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Spring Boot 3.3 unlocks this potential by providing 2 new features: &lt;a href=&quot;https://docs.spring.io/spring-boot/reference/packaging/class-data-sharing.html&quot;&gt;self-extracting executable JAR&lt;/a&gt; and &lt;a href=&quot;https://docs.spring.io/spring-boot/how-to/class-data-sharing.html&quot;&gt;Buildpacks CDS support&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 id=&quot;self-extracting-executable-jar&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#self-extracting-executable-jar&quot; aria-label=&quot;self extracting executable jar permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Self-extracting executable JAR&lt;/h2&gt;
-&lt;p&gt;Directly running &lt;code&gt;java -jar my-app.jar&lt;/code&gt; with the executable JAR is not the most efficient way to run your application on production. This is &lt;a href=&quot;https://docs.spring.io/spring-boot/reference/packaging/efficient.html&quot;&gt;documented&lt;/a&gt; but most developers and operators not using Buildpacks miss that based on various discussions I had with the Spring community. And until recently, there was no real first-class feature to help.&lt;/p&gt;
-&lt;p&gt;Spring Boot 3.3 changes that and introduces the capability for an executable JAR to self-extract without requiring any external tool, just with the java command likely already available to run the application:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;java -Djarmode=tools -jar my-app.jar extract --destination application
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Spring]]></title><description><![CDATA[Level up your Java code and explore what Spring can do for you.]]></description><link>https://spring.io</link><generator>GatsbyJS</generator><lastBuildDate>Wed, 27 Nov 2024 01:57:19 GMT</lastBuildDate><item><title><![CDATA[HTTP/3 support in Reactor 2024.0 Release Train]]></title><link>https://spring.io/blog/2024/11/26/http3-in-reactor-2024</link><guid isPermaLink="true">https://spring.io/blog/2024/11/26/http3-in-reactor-2024</guid><dc:creator><![CDATA[violetagg]]></dc:creator><pubDate>Tue, 26 Nov 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;&lt;a href=&quot;https://datatracker.ietf.org/doc/html/rfc9114&quot;&gt;HTTP/3&lt;/a&gt;, the latest major version of the &lt;code&gt;Hypertext Transfer Protocol&lt;/code&gt;,
+had its specification finalized in June 2022. This version is designed to enhance performance, reliability, and security.
+Unlike its predecessors, &lt;code&gt;HTTP/3&lt;/code&gt; utilizes &lt;a href=&quot;https://datatracker.ietf.org/doc/html/rfc9000&quot;&gt;QUIC&lt;/a&gt; instead of &lt;code&gt;TCP&lt;/code&gt; as its transport layer.
+&lt;code&gt;QUIC&lt;/code&gt; is a &lt;code&gt;UDP&lt;/code&gt;-based, multiplexed, and secure transport protocol that includes built-in &lt;a href=&quot;https://datatracker.ietf.org/doc/html/rfc8446&quot;&gt;TLS 1.3&lt;/a&gt; encryption,
+making &lt;code&gt;QUIC&lt;/code&gt; encrypted by default.&lt;/p&gt;
+&lt;p&gt;To learn more about the performance and benefits of &lt;code&gt;HTTP/3&lt;/code&gt;, check out &lt;a href=&quot;https://www.cloudflare.com/en-gb/learning/performance/what-is-http3/&quot;&gt;What is HTTP/3&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;For information on browser adoption, take a look at &lt;a href=&quot;https://blog.cloudflare.com/http3-usage-one-year-on/&quot;&gt;Examining HTTP/3 Usage&lt;/a&gt;,
+which also provides raw data on &lt;code&gt;HTTP&lt;/code&gt; versions used by different browsers.&lt;/p&gt;
+&lt;p&gt;Reactor Netty &lt;code&gt;1.2&lt;/code&gt; (part of Reactor &lt;code&gt;2024.0&lt;/code&gt; Release Train) adds &lt;code&gt;HTTP/3&lt;/code&gt; experimental support.
+With this new version of Reactor Netty, your Spring Boot application and Spring Cloud Gateway can be configured to support &lt;code&gt;HTTP/3&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Let’s see how you can configure the &lt;code&gt;HTTP/3&lt;/code&gt; support.&lt;/p&gt;
+&lt;h2 id=&quot;configure-reactor-bom-version&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#configure-reactor-bom-version&quot; aria-label=&quot;configure reactor bom version permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Configure Reactor BOM Version&lt;/h2&gt;
+&lt;p&gt;Spring Boot &lt;code&gt;3.4&lt;/code&gt; comes by default with Reactor &lt;code&gt;2024.0&lt;/code&gt; Release Train!&lt;/p&gt;
+&lt;p&gt;If you run an older Spring Boot version, you can experiment with this new feature by bumping Reactor BOM to &lt;code&gt;2024.0&lt;/code&gt;
+(As of this writing, &lt;code&gt;2024.0.0&lt;/code&gt; is the latest version).&lt;/p&gt;
+&lt;p&gt;Maven&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-xml&quot;&gt;&amp;#x3C;properties&gt;
+    &amp;#x3C;reactor-bom.version&gt;2024.0.0&amp;#x3C;/reactor-bom.version&gt;
+&amp;#x3C;/properties&gt;
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&quot;//images.ctfassets.net/mnrwi97vnhts/I1Q9dORIrQbTVDxcG55mT/754c4e055ef33e28983361833f97de3c/cds-layout.png&quot; alt=&quot;CDS file layout&quot;&gt;&lt;/p&gt;
-&lt;p&gt;You can then run your Spring Boot application more efficiently with:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;java -jar application/my-app.jar
+&lt;p&gt;Gradle&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-properties&quot;&gt;ext[&apos;reactor-bom.version&apos;] = &apos;2024.0.0&apos;
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;This feature has a superpower: it has been designed to fulfill CDS (and Project Leyden) constraints. So combined with Spring Framework support for CDS training runs, you can create a CDS archive for your Spring Boot application as following:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;java -XX:ArchiveClassesAtExit=application.jsa -Dspring.context.exit=onRefresh -jar application/my-app.jar
+&lt;h2 id=&quot;configure-netty-http3-codec&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#configure-netty-http3-codec&quot; aria-label=&quot;configure netty http3 codec permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Configure Netty HTTP3 Codec&lt;/h2&gt;
+&lt;p&gt;You also need to add a runtime dependency on the &lt;a href=&quot;https://github.com/netty/netty-incubator-codec-http3&quot;&gt;Netty HTTP3 Codec&lt;/a&gt;
+(As of this writing, &lt;code&gt;0.0.28.Final&lt;/code&gt; is the latest version).&lt;/p&gt;
+&lt;p&gt;Maven&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-xml&quot;&gt;&amp;#x3C;dependencies&gt;
+    &amp;#x3C;dependency&gt;
+        &amp;#x3C;groupId&gt;io.netty.incubator&amp;#x3C;/groupId&gt;
+        &amp;#x3C;artifactId&gt;netty-incubator-codec-http3&amp;#x3C;/artifactId&gt;
+        &amp;#x3C;version&gt;0.0.28.Final&amp;#x3C;/version&gt;
+        &amp;#x3C;scope&gt;runtime&amp;#x3C;/scope&gt;
+    &amp;#x3C;/dependency&gt;
+&amp;#x3C;/dependencies&gt;
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Then you can start your application with CDS enabled with:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;java -XX:SharedArchiveFile=application.jsa -jar application/my-app.jar
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&quot;cds-and-spring-aot-activation-support-in-buildpacks&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#cds-and-spring-aot-activation-support-in-buildpacks&quot; aria-label=&quot;cds and spring aot activation support in buildpacks permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;CDS and Spring AOT activation support in Buildpacks&lt;/h2&gt;
-&lt;p&gt;The self-extracting executable JAR feature combined with CDS usage is flexible but still requires quite a lot of manual steps, so Spring Boot and Buildpacks provide integrated support for CDS which:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Performs automatically the training run when creating the container image.&lt;/li&gt;
-&lt;li&gt;Extract the Spring Boot executable JAR to the CDS friendly file layout mentioned above.&lt;/li&gt;
-&lt;li&gt;Ship the CDS archive within the container.&lt;/li&gt;
-&lt;li&gt;Automatically enable CDS when running the container image.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;img src=&quot;//images.ctfassets.net/mnrwi97vnhts/3l0bqmaHOdy4ombbR9D4gU/ebb6e31307cb5a2e44bfec7711d350ad/cds-buildpacks.png&quot; alt=&quot;Buildpacks CDS support&quot;&gt;&lt;/p&gt;
-&lt;p&gt;As demonstrated in the &lt;a href=&quot;https://github.com/sdeleuze/spring-boot-cds-demo&quot;&gt;https://github.com/sdeleuze/spring-boot-cds-demo&lt;/a&gt; repository, it can be enabled as following with Gradle:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-groovy&quot;&gt;tasks.named(&quot;bootBuildImage&quot;) {
-	environment[&quot;BP_JVM_CDS_ENABLED&quot;] = &quot;true&quot;
+&lt;p&gt;Gradle&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-properties&quot;&gt;dependencies {
+    runtimeOnly &apos;io.netty.incubator:netty-incubator-codec-http3:0.0.28.Final&apos;
 }
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Or with Maven:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-xml&quot;&gt;&amp;#x3C;plugin&gt;
-	&amp;#x3C;groupId&gt;org.springframework.boot&amp;#x3C;/groupId&gt;
-	&amp;#x3C;artifactId&gt;spring-boot-maven-plugin&amp;#x3C;/artifactId&gt;
-	&amp;#x3C;configuration&gt;
-		&amp;#x3C;image&gt;
-			&amp;#x3C;env&gt;
-				&amp;#x3C;BP_JVM_CDS_ENABLED&gt;true&amp;#x3C;/BP_JVM_CDS_ENABLED&gt;
-			&amp;#x3C;/env&gt;
-		&amp;#x3C;/image&gt;
-	&amp;#x3C;/configuration&gt;
-&amp;#x3C;/plugin&gt;
+&lt;h2 id=&quot;the-server&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#the-server&quot; aria-label=&quot;the server permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;The Server&lt;/h2&gt;
+&lt;h3 id=&quot;configure-ssl-bundle&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#configure-ssl-bundle&quot; aria-label=&quot;configure ssl bundle permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Configure SSL Bundle&lt;/h3&gt;
+&lt;p&gt;The first thing that you need to provide is an
+&lt;a href=&quot;https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#features.ssl&quot;&gt;SSL bundle&lt;/a&gt;
+with the configuration that your application requires: keystore, ciphers etc.&lt;/p&gt;
+&lt;p&gt;application.properties&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-properties&quot;&gt;spring.ssl.bundle.jks.server-http3.key.alias=http3
+spring.ssl.bundle.jks.server-http3.keystore.location=...
+spring.ssl.bundle.jks.server-http3.keystore.password=...
+...
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;During the training run, the Spring beans are instantiated without starting the Spring lifecycle, so in practice the main side effect you may observe is early database interactions which can be avoided by configuring your application (or just the training run with the &lt;code&gt;CDS_TRAINING_JAVA_TOOL_OPTIONS&lt;/code&gt; environment variable) to prevent such database interaction as documented &lt;a href=&quot;https://github.com/spring-projects/spring-lifecycle-smoke-tests/tree/main#training-run-configuration&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;It is also possible to trigger Spring AOT activation support with the &lt;code&gt;BP_SPRING_AOT_ENABLED&lt;/code&gt; environment variable but make sure to have those constraints in mind:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Enable Spring AOT in your Maven or Gradle build.&lt;/li&gt;
-&lt;li&gt;Potentially configure Spring AOT to use the Spring profile that will be used in the deployment environment.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;CDS_TRAINING_JAVA_TOOL_OPTIONS&lt;/code&gt; and &lt;code&gt;BP_SPRING_AOT_ENABLED&lt;/code&gt; can’t be combined.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;The Spring and Buildpacks teams at Broadcom have been collaborating closely to leverage those OSS features and combine them with additional &lt;a href=&quot;https://tanzu.vmware.com/platform&quot;&gt;Tanzu Platform&lt;/a&gt; capabilities in order to provide a first-class CDS support for Cloud Foundry or Kubernetes, allowing for example training run autoconfiguration, making CDS as easy to enable as a flag with no side effects, and more platform-level capabilities are coming.&lt;/p&gt;
-&lt;h2 id=&quot;data-points&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#data-points&quot; aria-label=&quot;data points permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Data points&lt;/h2&gt;
-&lt;p&gt;With a minimal Spring MVC Tomcat application running on a MacBook M2, we observe that the extracted application combined with CDS allows approximately 1.5x faster startup and 16% lower memory consumption compared to running the executable JAR. If we add Spring AOT to the mix, we get approximately 2x faster startup and 27% lower memory consumption.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;//images.ctfassets.net/mnrwi97vnhts/7ddooZznyEqu5fkhlB2zWg/381cd85a88adc1195e45cd8014f30f8d/WebMVC_process_startup_time__ms__and_RSS_after_startup__Mb__final.png&quot; alt=&quot;WebMVC process startup time (ms) and RSS after startup (Mb)&quot;&gt;&lt;/p&gt;
-&lt;p&gt;We see similar improvements for Petclinic.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;//images.ctfassets.net/mnrwi97vnhts/6sLIbWeeIyVKfikEfZSPSr/f11c4e5b2cf8a57d9aec4eb1c4c37005/Petclinic_process_startup_time__ms__and_RSS_after_startup__Mb_.png&quot; alt=&quot;Petclinic process startup time (ms) and RSS after startup (Mb)&quot;&gt;&lt;/p&gt;
-&lt;p&gt;The values will obviously change on less powerful cloud instances, but you should likely observe similar improvement ratios.&lt;/p&gt;
-&lt;h2 id=&quot;spring-boot-and-project-leyden&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#spring-boot-and-project-leyden&quot; aria-label=&quot;spring boot and project leyden permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Spring Boot and Project Leyden&lt;/h2&gt;
-&lt;p&gt;Interestingly, the CDS friendly layout used by the new extract command described above is also designed to provide optimal performance with &lt;a href=&quot;https://jdk.java.net/leyden/&quot;&gt;Project Leyden Early-Access builds&lt;/a&gt; which can be seen as a CDS successor with additional capabilities allowing:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Even faster startup.&lt;/li&gt;
-&lt;li&gt;Smaller container images (by removing the CDS archive of the JDK to keep only the application one).&lt;/li&gt;
-&lt;li&gt;Ahead-Of-Time warmup to have better performance after startup and reach peak performance faster.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;We observe for now approximately 3x faster startup on Spring Boot applications with Project Leyden and 4x faster startup when combining Project Leyden and Spring AOT.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;//images.ctfassets.net/mnrwi97vnhts/29U5DxjYZGkljFG2CF8xH7/99302b221a338c9bc5ff1676d4067c03/Leyden.png&quot; alt=&quot;Project Leyden data points&quot;&gt;&lt;/p&gt;
-&lt;p&gt;I will share more in the upcoming &lt;a href=&quot;https://devoxx.be/talk/?id=18479&quot;&gt;Project Leyden talk at Devoxx Belgium 2024&lt;/a&gt; that I will have the pleasure to co-present with Per Minborg from the Java Platform team.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[This Week in Spring - August 27th, 2024 - SpringOne 2024 edition]]></title><link>https://spring.io/blog/2024/08/27/this-week-in-spring-august-27th-2024-springone-2024-edition</link><guid isPermaLink="true">https://spring.io/blog/2024/08/27/this-week-in-spring-august-27th-2024-springone-2024-edition</guid><dc:creator><![CDATA[Josh Long]]></dc:creator><pubDate>Tue, 27 Aug 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Hi, Spring fans, from the expo hall of SpringOne at VMware Explore 2024! There&apos;s  a livestream of some of the  key talks - register and watch for free now at &lt;a href=&quot;https://springone.io&quot;&gt;SpringOne.io&lt;/a&gt;. Right now I&apos;m hanging out at the expo hall manning a booth and doing demos to the hoardes of people streaming by, but I&apos;ll be talking a bit later, too, which, again, you can watch online at &lt;a href=&quot;https://springone.io&quot;&gt;SpringOne.io&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;As you can imagine, in the runup to SpringOne, there are a ton of exciting bits to look into, so let&apos;s!&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/08/23/spring-ai-1-0-0-m2-released&quot;&gt;Spring AI 1.0.0 M2 is available now!&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/08/20/spring-ai-with-nvidia-llm-api&quot;&gt;Spring AI support for NVIDIA LLM API&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Good news everybody! &lt;a href=&quot;https://spring.io/blog/2024/08/27/spring-shell-3-2-7-3-3-2-and-3-4-0-m1-are-now-available&quot;&gt;Spring Shell 3.3.7, 3.3.2, and 3.4.0 M1 are now available&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/08/23/spring-modulith-1-3-m2-1-2-3-and-1-1-8-released&quot;&gt;Spring Modulith 1.3 M2 and 1.2.3 are available&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;[Spring Boot CVE fixes](&lt;a href=&quot;https://spring.io/blog/2024/08/23/spring-boot-releases-fix-for-cve-2024-38807&quot;&gt;https://spring.io/blog/2024/08/23/spring-boot-releases-fix-for-cve-2024-38807&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/08/23/structured-logging-in-spring-boot-3-4&quot;&gt;check out this nice blog looking at structured logging in Spring Boot 3.4&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/08/23/spring-boot-3-4-0-m2-available-now&quot;&gt;Spring Boot 3.4 M2 now available&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/08/23/a-bootiful-podcast-vaadin-developer-advocacy-legend-marcus-hellberg&quot;&gt;In last week&apos;s &lt;em&gt;A Bootiful Podcast&lt;/em&gt;, i talked with Vaadin&apos;s Marcus Hellberg&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/08/22/spring-boot-3-3-3-available-now&quot;&gt;Spring Boot 3.3.3 is now available&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/08/22/spring-boot-3-2-9-available-now&quot;&gt;Spring Boot 3.2.9 is now available&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/08/21/spring-session-3-3-2-and-3-2-5-are-available-now&quot;&gt;Spring Session 3.3.2 and 3.2.5 are available now&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/08/21/spring-session-3-4-0-m2-is-available-now&quot;&gt;Spring Session 3.4.0 M2 are available now&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/08/21/spring-security-6-4-0-m2-is-available-now&quot;&gt;Spring Security 6.4.0 M2 is available now&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/08/20/spring-for-apache-pulsar-1-2-0-m1-is-now-available&quot;&gt;Spring for Apache Pulsar 1.2.0 M1 is available now&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/08/20/spring-for-apache-pulsar-1-0-9-and-1-1-3-are-now-available&quot;&gt;Spring for Apache Pulsar 1.0.9 and 1.1.3 are now available&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/08/20/spring-security-5-8-14-6-2-6-and-6-3-2-are-available-now&quot;&gt;Spring Security 5.8.14 and 6.3.2 are available&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/08/20/spring-authorization-server-1-4-0-m1-1-3-2-and-1-2-6-available-now&quot;&gt;Spring Authorization Server 1.4 m1 and 1.3.2 are available&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/08/20/spring-for-apache-kafka-3-3-0-m2-3-2-3-and-3-1-8-available-now&quot;&gt;Spring for Apache Kafka 3.3.0 M2 is available now&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/08/20/spring-cloud-2024-0-0-m1-aka-mooregate-has-been-released&quot;&gt;Spring Cloud Mooregate now available&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[Spring Shell 3.2.7, 3.3.2 and 3.4.0-M1 are now available]]></title><link>https://spring.io/blog/2024/08/27/spring-shell-3-2-7-3-3-2-and-3-4-0-m1-are-now-available</link><guid isPermaLink="true">https://spring.io/blog/2024/08/27/spring-shell-3-2-7-3-3-2-and-3-4-0-m1-are-now-available</guid><dc:creator><![CDATA[Janne Valkealahti]]></dc:creator><pubDate>Tue, 27 Aug 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;On behalf of the team and everyone who has contributed, I&apos;m happy to announce that Spring Shell &lt;code&gt;3.2.7&lt;/code&gt;, &lt;code&gt;3.3.2&lt;/code&gt; and &lt;code&gt;3.4.0-M1&lt;/code&gt; has been released and are now available from Maven Central and &lt;a href=&quot;https://repo.spring.io/milestone&quot;&gt;Milestone Repo&lt;/a&gt; respectively.&lt;/p&gt;
-&lt;p&gt;Please see the &lt;a href=&quot;https://github.com/spring-projects/spring-shell/releases/tag/v3.2.7&quot;&gt;release notes 3.2.7&lt;/a&gt;, &lt;a href=&quot;https://github.com/spring-projects/spring-shell/releases/tag/v3.3.2&quot;&gt;release notes 3.3.2&lt;/a&gt; and &lt;a href=&quot;https://github.com/spring-projects/spring-shell/releases/tag/v3.4.0-M1&quot;&gt;release notes 3.4.0-M1&lt;/a&gt; for more details.&lt;/p&gt;
-&lt;p&gt;Thanks to all those who have contributed with issue reports and pull requests.&lt;/p&gt;
-&lt;h3 id=&quot;how-can-you-help&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#how-can-you-help&quot; aria-label=&quot;how can you help permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;How can you help?&lt;/h3&gt;
-&lt;p&gt;&lt;a href=&quot;https://spring.io/projects/spring-shell/&quot;&gt;Project Page&lt;/a&gt; | &lt;a href=&quot;https://github.com/spring-projects/spring-shell&quot;&gt;GitHub&lt;/a&gt; | &lt;a href=&quot;https://github.com/spring-projects/spring-shell/issues&quot;&gt;Issues&lt;/a&gt; | &lt;a href=&quot;https://docs.spring.io/spring-shell/reference/index.html&quot;&gt;Documentation&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Spring AI 1.0.0 M2 released]]></title><link>https://spring.io/blog/2024/08/23/spring-ai-1-0-0-m2-released</link><guid isPermaLink="true">https://spring.io/blog/2024/08/23/spring-ai-1-0-0-m2-released</guid><dc:creator><![CDATA[Mark Pollack]]></dc:creator><pubDate>Fri, 23 Aug 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;We are happy to announce the 1.0.0 Milestone 2 release of Spring AI.&lt;/p&gt;
-&lt;p&gt;This release brings significant enhancements and new features across various areas.&lt;/p&gt;
-&lt;h2 id=&quot;key-focus-observability&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#key-focus-observability&quot; aria-label=&quot;key focus observability permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Key Focus: Observability&lt;/h2&gt;
-&lt;p&gt;A major emphasis for this release has been on observability functionality, crucial for monitoring, debugging, and optimizing AI applications. Comprehensive observability features have been introduced for:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;ChatClient&lt;/code&gt; (including Advisors)&lt;/li&gt;
-&lt;li&gt;Chat Models (OpenAI, Ollama, Mistral, Anthropic)&lt;/li&gt;
-&lt;li&gt;Embedding Models&lt;/li&gt;
-&lt;li&gt;Image Generation Models&lt;/li&gt;
-&lt;li&gt;Vector Stores&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: Support for additional &lt;code&gt;ChatModel&lt;/code&gt; implementation will be added in future releases.&lt;/p&gt;
-&lt;p&gt;Here are some samples showcasing this functionality to get started&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/tzolov/ai-observability-demo&quot;&gt;Observability Demo&lt;/a&gt; from Christian Tzolov&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/ThomasVitale/llm-apps-java-spring-ai/tree/main/14-observability&quot;&gt;Observability Demos&lt;/a&gt; from Thomas Vitale&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Grazie mille (a thousand thanks ;) to Thomas Vitale for his significant efforts in contributing to the Observability feature!&lt;/p&gt;
-&lt;p&gt;Here is a screenshot showing the tracing of the following code&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;var response = chatClient.prompt()
-	.user(&quot;How does Carina work?&quot;)
-	.advisors(new QuestionAnswerAdvisor(vectorStore, SearchRequest.defaults()))
-	.advisors(new PromptChatMemoryAdvisor(chatMemory))
-	.call()
-	.chatResponse();
+&lt;p&gt;application.yml&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-yaml&quot;&gt;spring:
+  ssl:
+    bundle:
+      jks:
+        server-http3:
+          key:
+            alias: http3
+          keystore:
+            location: ...
+            password: ...
+          ...
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&quot;//images.ctfassets.net/mnrwi97vnhts/2hk6LlyJFSL8hlzjGiSMaI/f136ab86696b1b59a5efbf94c8373256/spring-ai-blog-observability3.png&quot; alt=&quot;Grafana view of Spring AI Trace&quot;&gt;&lt;/p&gt;
-&lt;p&gt;In the trace view, you can see the nesting of the &lt;code&gt;ChatClient&lt;/code&gt; call which first passes through two advisors, the &lt;code&gt;QuestionAnswerAdvisor&lt;/code&gt; that does an embedding request and a query to the PGVector database.  Then it passes through the &lt;code&gt;PromptChatMemoryAdvisor&lt;/code&gt;, which takes very little time, and then finally to the calling of the OpenAI &lt;code&gt;gpt-4o&lt;/code&gt; model.&lt;/p&gt;
-&lt;p&gt;You can find all the details what metrics are available in the &lt;a href=&quot;https://docs.spring.io/spring-ai/reference/observabilty/index.html&quot;&gt;Observability Documentation&lt;/a&gt;&lt;/p&gt;
-&lt;h2 id=&quot;core-improvements&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#core-improvements&quot; aria-label=&quot;core improvements permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Core improvements&lt;/h2&gt;
+&lt;h3 id=&quot;configure-the-embedded-server&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#configure-the-embedded-server&quot; aria-label=&quot;configure the embedded server permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Configure the Embedded Server&lt;/h3&gt;
+&lt;p&gt;Spring Boot gives you the ability to configure the embedded server.
+Spring Cloud Gateway uses the same approach to achieve this task.&lt;/p&gt;
+&lt;p&gt;You can declare a component &lt;code&gt;WebServerFactoryCustomizer&lt;/code&gt; and get access to the server factory.
+In order to enable the &lt;code&gt;HTTP/3&lt;/code&gt; support you need to:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;New:&lt;/strong&gt; &lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/etl-pipeline.html#_markdown&quot;&gt;MarkdownDocumentReader&lt;/a&gt; for ETL pipelines&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;New:&lt;/strong&gt; Cassandra-backed &lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/chatclient.html#_chat_memory&quot;&gt;chat memory&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;New:&lt;/strong&gt; Typesense testcontainer integration&lt;/li&gt;
-&lt;li&gt;ChatClient enhancements
+&lt;li&gt;Specify the &lt;a href=&quot;https://projectreactor.io/docs/netty/release/api/reactor/netty/http/HttpProtocol.html#HTTP3&quot;&gt;HTTP/3 protocol&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;By default, Reactor Netty is configured to support &lt;code&gt;HTTP/1.1&lt;/code&gt;, so you need to change it.&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;Function registration with explicit input type&lt;/li&gt;
-&lt;li&gt;Dynamic filter expressions for QuestionAnswerAdvisor&lt;/li&gt;
-&lt;li&gt;Customizable logger advisor&lt;/li&gt;
+&lt;li&gt;Specify the &lt;a href=&quot;https://projectreactor.io/docs/netty/release/api/reactor/netty/http/Http3SettingsSpec.Builder.html&quot;&gt;HTTP/3 settings&lt;/a&gt;.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Improved API design of ResponseMetadata and the Message object hierarchy&lt;/li&gt;
-&lt;li&gt;Embedding format changed from List&lt;Double&gt; to float[]&lt;/li&gt;
-&lt;li&gt;Added JSON array handling to JsonReader&lt;/li&gt;
-&lt;li&gt;Options improvements
+&lt;p&gt;By default, Reactor Netty does not provide any settings because those are strongly specific to the application, so you have to configure them: idle timeout, max streams, etc.&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;ChatOptions: Enhanced metadata configuration for defined models&lt;/li&gt;
-&lt;li&gt;EmbeddingOptions: Added model and dimensions options&lt;/li&gt;
-&lt;li&gt;ImageOptions: Added style option&lt;/li&gt;
+&lt;li&gt;Specify the &lt;a href=&quot;https://projectreactor.io/docs/netty/release/api/reactor/netty/http/Http3SslContextSpec.html&quot;&gt;HTTP/3 SSLContext&lt;/a&gt;.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;ChatOptions added to PromptTemplate create methods&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;chatmodel-enhancements&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#chatmodel-enhancements&quot; aria-label=&quot;chatmodel enhancements permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;ChatModel Enhancements&lt;/h2&gt;
-&lt;p&gt;General improvements have been made across the chat model infrastructure classes. Key feature enhancements for specific models include:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Anthropic: Added Function calling support&lt;/li&gt;
-&lt;li&gt;Azure Open AI
-&lt;ul&gt;
-&lt;li&gt;Function calling integration&lt;/li&gt;
-&lt;li&gt;Updated to Azure OpenAI Client library 1.0 beta-10&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;New:&lt;/strong&gt; &lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/audio/transcriptions/azure-openai-transcriptions.html&quot;&gt;Transcription support&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Added image handling for byte arrays&lt;/li&gt;
-&lt;li&gt;Added Multimodality support&lt;/li&gt;
-&lt;li&gt;Added OpenAI API key and MS-Entra authentication options&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Amazon Bedrock: Updated &lt;code&gt;bedrockruntime&lt;/code&gt; version to 2.26.7&lt;/li&gt;
-&lt;li&gt;HuggingFace: Added Boot starter&lt;/li&gt;
-&lt;li&gt;Minimax
-&lt;ul&gt;
-&lt;li&gt;Improved function calling&lt;/li&gt;
-&lt;li&gt;Added Web search tool support&lt;/li&gt;
-&lt;li&gt;Introduced sensitive information masking option&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Mistral
-&lt;ul&gt;
-&lt;li&gt;Added function calling support&lt;/li&gt;
-&lt;li&gt;Documentation for using Mistral AI via Spring AI&apos;s OpenAI client&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;New:&lt;/strong&gt; &lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/chat/moonshot-chat.html&quot;&gt;Moonshot chat model with function calling&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Ollama
-&lt;ul&gt;
-&lt;li&gt;Function calling support&lt;/li&gt;
-&lt;li&gt;Batch embedding request functionality&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;OpenAI
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;New:&lt;/strong&gt; &lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/moderation/openai-moderation.html&quot;&gt;Moderation API support&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Updates for partially compliant OpenAI model providers&lt;/li&gt;
-&lt;li&gt;Usage statistics for streaming chat responses&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/chat/groq-chat.html&quot;&gt;Groq model provider integration with documentation&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Configurable URL paths for Chat and Embedding models&lt;/li&gt;
-&lt;li&gt;Documentation for using &lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/chat/mistralai-chat.html#_openai_api_compatibility&quot;&gt;Mistral AI&lt;/a&gt; and &lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/chat/nvidia-chat.html&quot;&gt;NVIDIA LLM API&lt;/a&gt; via Spring AI&apos;s OpenAI client&lt;/li&gt;
-&lt;li&gt;Parallel function calling support&lt;/li&gt;
-&lt;li&gt;Organization ID and Project ID authentication options&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;New:&lt;/strong&gt; QianFan model for &lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/chat/qianfan-chat.html&quot;&gt;chat&lt;/a&gt;, &lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/embeddings/qianfan-embeddings.html&quot;&gt;embeddings&lt;/a&gt;, and &lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/image/qianfan-image.html&quot;&gt;image&lt;/a&gt; generation.&lt;/li&gt;
-&lt;li&gt;ONNX - Improved transformer embedding model&lt;/li&gt;
-&lt;li&gt;Google Vertex AI
-&lt;ul&gt;
-&lt;li&gt;Add &lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/embeddings/vertexai-embeddings-text.html&quot;&gt;Embedding model&lt;/a&gt; support&lt;/li&gt;
-&lt;li&gt;Updated Google Vertex SDK to 26.41.0&lt;/li&gt;
-&lt;li&gt;Resolved parallel function calling&lt;/li&gt;
-&lt;li&gt;Added system message support&lt;/li&gt;
-&lt;li&gt;Added ResponeMimeType in chat options&lt;/li&gt;
-&lt;li&gt;Added Google search retrieval tool support&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;ZhiPu: Added function calling support&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Thanks for &lt;a href=&quot;https://github.com/mxsl-gr&quot;&gt;Geng Rong&lt;/a&gt; for the Moonshot, QianFan, and ZhiPu model support.&lt;/p&gt;
-&lt;h2 id=&quot;vector-store-improvements&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#vector-store-improvements&quot; aria-label=&quot;vector store improvements permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Vector Store improvements&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Breaking Change&lt;/strong&gt;: Default value for vector store configuration property &lt;code&gt;initialize-schema&lt;/code&gt; changed to false.&lt;/li&gt;
-&lt;li&gt;Introduced &lt;code&gt;BatchingStrategy&lt;/code&gt; for efficient document embedding operations
-&lt;ul&gt;
-&lt;li&gt;Added &lt;code&gt;TokenCountBatchingStrategy&lt;/code&gt; implementation&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Cassandra: Added &lt;code&gt;CassandraChatMemory&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Chroma:
-&lt;ul&gt;
-&lt;li&gt;Upgraded from use of &lt;code&gt;RestTemplate&lt;/code&gt; to &lt;code&gt;RestClient&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Integrated ChromaDB&apos;s &lt;code&gt;CHROMA_SERVER_AUTHN_CREDENTIALS&lt;/code&gt; environment variable for Docker Compose and Testcontainers&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Gemfire: Enhanced functionality&lt;/li&gt;
-&lt;li&gt;Milvus: Removed flush operations to prevent excessive segment creation&lt;/li&gt;
-&lt;li&gt;MongoDB: Improved efficiency using &lt;code&gt;org.bson.Documents&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Neo4j - Updated to latest Cypher-DSL&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;New:&lt;/strong&gt; &lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/vectordbs/opensearch.html&quot;&gt;Opensearch VectorStore implementation&lt;/a&gt;  Thanks &lt;a href=&quot;https://github.com/JM-Lab&quot;&gt;Jemin Huh&lt;/a&gt;!&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;New:&lt;/strong&gt; &lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/vectordbs/oracle.html&quot;&gt;Oracle 23ai VectorStore implementation&lt;/a&gt;  Thanks &lt;a href=&quot;https://github.com/loiclefevre&quot;&gt;Loïc Lefèvre&lt;/a&gt;!&lt;/li&gt;
-&lt;li&gt;PGVector
-&lt;ul&gt;
-&lt;li&gt;Introduced customizable schema, table, and index names&lt;/li&gt;
-&lt;li&gt;Fixed IN/NOT IN filters for JSON queries&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Pinecone
-&lt;ul&gt;
-&lt;li&gt;Added configurable content and distance metadata fields&lt;/li&gt;
-&lt;li&gt;Added AOT hints&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Redis: Enabled use of standard &lt;code&gt;RedisAutoConfiguration&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;New:&lt;/strong&gt; &lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/vectordbs/typesense.html&quot;&gt;Typesense support&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;general-improvements&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#general-improvements&quot; aria-label=&quot;general improvements permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;General improvements&lt;/h2&gt;
-&lt;p&gt;Many refactoring, bug fixing, documentation enhancements across the board by a wide range of contributors. If we haven’t gotten to your PR yet, we will, please be patient. Thanks to&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;https://github.com/N/A&quot;&gt;Mohammed, Ahmed Yousri Salama&lt;/a&gt;, &lt;a href=&quot;https://github.com/AshwinKrishnaK&quot;&gt;Ashwin Krishna K&lt;/a&gt;, &lt;a href=&quot;https://github.com/BlackBean99&quot;&gt;blackbean99&lt;/a&gt;, &lt;a href=&quot;https://github.com/Cho-D-YoungRae&quot;&gt;Youngrae Cho&lt;/a&gt;, &lt;a href=&quot;https://github.com/DadySu&quot;&gt;DadySu&lt;/a&gt;, &lt;a href=&quot;https://github.com/Flyingblu&quot;&gt;Jerry (Flyingblu)&lt;/a&gt;, &lt;a href=&quot;https://github.com/Grogdunn&quot;&gt;Lorenzo Caenazzo&lt;/a&gt;, &lt;a href=&quot;https://github.com/JM-Lab&quot;&gt;Jemin Huh&lt;/a&gt;, &lt;a href=&quot;https://github.com/JavaProgrammerLB&quot;&gt;Bill Lau&lt;/a&gt;, &lt;a href=&quot;https://github.com/JayPark7821&quot;&gt;JayPark7821&lt;/a&gt;, &lt;a href=&quot;https://github.com/KAMO030&quot;&gt;KAMOsama&lt;/a&gt;, &lt;a href=&quot;https://github.com/Kirboyyy&quot;&gt;David Caudill&lt;/a&gt;, &lt;a href=&quot;https://github.com/Lee-ChungMu&quot;&gt;Lee-ChungMu&lt;/a&gt;, &lt;a href=&quot;https://github.com/PabloSanchi&quot;&gt;Pablo Sanchi&lt;/a&gt;, &lt;a href=&quot;https://github.com/Seol-JY&quot;&gt;Seol_JY&lt;/a&gt;, &lt;a href=&quot;https://github.com/TarasVovk669&quot;&gt;TarasVovk669&lt;/a&gt;, &lt;a href=&quot;https://github.com/ThomasVitale&quot;&gt;Thomas Vitale&lt;/a&gt;, &lt;a href=&quot;https://github.com/TimJ0212&quot;&gt;TimJ0212&lt;/a&gt;, &lt;a href=&quot;https://github.com/alexcheng1982&quot;&gt;Fu Cheng&lt;/a&gt;, &lt;a href=&quot;https://github.com/ashni-mongodb&quot;&gt;ashni&lt;/a&gt;, &lt;a href=&quot;https://github.com/bmoussaud&quot;&gt;Benoit Moussaud&lt;/a&gt;, &lt;a href=&quot;https://github.com/chemicL&quot;&gt;Dariusz J?drzejczyk&lt;/a&gt;, &lt;a href=&quot;https://github.com/cocomongg&quot;&gt;cocomongg&lt;/a&gt;, &lt;a href=&quot;https://github.com/cyPark95&quot;&gt;ChanYeong&lt;/a&gt;, &lt;a href=&quot;https://github.com/dafriz&quot;&gt;David Afriz&lt;/a&gt;, &lt;a href=&quot;https://github.com/devholic22&quot;&gt;devholic22&lt;/a&gt;, &lt;a href=&quot;https://github.com/didalgolab&quot;&gt;Mariusz Bernacki&lt;/a&gt;, &lt;a href=&quot;https://github.com/dongfeng3692&quot;&gt;dongfeng3692&lt;/a&gt;, &lt;a href=&quot;https://github.com/dsyer&quot;&gt;Dave Syer&lt;/a&gt;, &lt;a href=&quot;https://github.com/eddumelendez&quot;&gt;Eddú Meléndez&lt;/a&gt;, &lt;a href=&quot;https://github.com/elmahdi43&quot;&gt;El Mahdi Oukhamou&lt;/a&gt;, &lt;a href=&quot;https://github.com/fing9&quot;&gt;Seongmin Kim&lt;/a&gt;, &lt;a href=&quot;https://github.com/fjtorres-zerocopy&quot;&gt;Francisco Javier Torres&lt;/a&gt;, &lt;a href=&quot;https://github.com/geetrawat&quot;&gt;geetrawat&lt;/a&gt;, &lt;a href=&quot;https://github.com/habuma&quot;&gt;Craig Walls&lt;/a&gt;, &lt;a href=&quot;https://github.com/hakusai22&quot;&gt;yinpeng&lt;/a&gt;, &lt;a href=&quot;https://github.com/impactCn&quot;&gt;Sinsy&lt;/a&gt;, &lt;a href=&quot;https://github.com/izeye&quot;&gt;Johnny Lim&lt;/a&gt;, &lt;a href=&quot;https://github.com/jo-kim&quot;&gt;jo-kim&lt;/a&gt;, &lt;a href=&quot;https://github.com/joshlong&quot;&gt;Josh Long&lt;/a&gt;, &lt;a href=&quot;https://github.com/jyami-kim&quot;&gt;KimMinjeong&lt;/a&gt;, &lt;a href=&quot;https://github.com/kirkster96&quot;&gt;Cameron Kirk&lt;/a&gt;, &lt;a href=&quot;https://github.com/l-trotta&quot;&gt;Laura Trotta&lt;/a&gt;, &lt;a href=&quot;https://github.com/loiclefevre&quot;&gt;Loïc Lefèvre&lt;/a&gt;, &lt;a href=&quot;https://github.com/loveysuby&quot;&gt;Hyoseop Song&lt;/a&gt;, &lt;a href=&quot;https://github.com/luocongqiu&quot;&gt;luocq3&lt;/a&gt;, &lt;a href=&quot;https://github.com/michael-simons&quot;&gt;Michael Simons&lt;/a&gt;, &lt;a href=&quot;https://github.com/michaelsembwever&quot;&gt;mck&lt;/a&gt;, &lt;a href=&quot;https://github.com/moon0cean&quot;&gt;Jonatan Soto&lt;/a&gt;, &lt;a href=&quot;https://github.com/muthuishere&quot;&gt;Muthukumaran Navaneethakrishnan&lt;/a&gt;, &lt;a href=&quot;https://github.com/mxsl-gr&quot;&gt;Geng Rong&lt;/a&gt;, &lt;a href=&quot;https://github.com/nichozhan&quot;&gt;Nicholas Zhan&lt;/a&gt;, &lt;a href=&quot;https://github.com/ochnios&quot;&gt;Szymon Ochnio&lt;/a&gt;, &lt;a href=&quot;https://github.com/pgerhard&quot;&gt;Philipp Gerhard&lt;/a&gt;, &lt;a href=&quot;https://github.com/piotrooo&quot;&gt;Piotr Olaszewski&lt;/a&gt;, &lt;a href=&quot;https://github.com/rapenumaka&quot;&gt;rapenumaka&lt;/a&gt;, &lt;a href=&quot;https://github.com/rivkode&quot;&gt;rivkode&lt;/a&gt;, &lt;a href=&quot;https://github.com/rozza&quot;&gt;Ross Lawley&lt;/a&gt;, &lt;a href=&quot;https://github.com/rubin0&quot;&gt;Andrea Rubino&lt;/a&gt;, &lt;a href=&quot;https://github.com/sobychacko&quot;&gt;Soby Chacko&lt;/a&gt;, &lt;a href=&quot;https://github.com/status2xx&quot;&gt;xiaoxin&lt;/a&gt;, &lt;a href=&quot;https://github.com/stefanvassilev&quot;&gt;Stefan Vassilev&lt;/a&gt;, &lt;a href=&quot;https://github.com/timotheekelly&quot;&gt;Tim Kelly&lt;/a&gt;, &lt;a href=&quot;https://github.com/turchinc&quot;&gt;Chris Turchin&lt;/a&gt;, &lt;a href=&quot;https://github.com/uzhuraul&quot;&gt;uzhuraul&lt;/a&gt;, &lt;a href=&quot;https://github.com/v891&quot;&gt;Veerendra Vellanki&lt;/a&gt;, &lt;a href=&quot;https://github.com/wb04307201&quot;&gt;??&lt;/a&gt;, &lt;a href=&quot;https://github.com/xieyucan&quot;&gt;xiehui1956&lt;/a&gt;, &lt;a href=&quot;https://github.com/xsg22&quot;&gt;xsg22&lt;/a&gt;, &lt;a href=&quot;https://github.com/yeseong0412&quot;&gt;???&lt;/a&gt;, &lt;a href=&quot;https://github.com/yulshi&quot;&gt;Yulong Shi&lt;/a&gt;, &lt;a href=&quot;https://github.com/zbqmgldjfh&quot;&gt;jiwoo&lt;/a&gt;, &lt;a href=&quot;https://github.com/zlzzlzz2l&quot;&gt;zlzzlzz2l&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Spring Modulith 1.3 M2, 1.2.3, and 1.1.8 released]]></title><link>https://spring.io/blog/2024/08/23/spring-modulith-1-3-m2-1-2-3-and-1-1-8-released</link><guid isPermaLink="true">https://spring.io/blog/2024/08/23/spring-modulith-1-3-m2-1-2-3-and-1-1-8-released</guid><dc:creator><![CDATA[Oliver Drotbohm]]></dc:creator><pubDate>Fri, 23 Aug 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;It is my pleasure to announce the availability of Spring Modulith 1.3 M2, 1.2.3, and 1.1.8. They all contain bug fixes and upgrades to the latest versions of dependencies. Here are the most important features of the releases:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Support for nested application modules (1.3 M2 only). See the &lt;a href=&quot;https://docs.spring.io/spring-modulith/reference/1.3/fundamentals.html#modules.nested&quot;&gt;reference documentation&lt;/a&gt; for details. – &lt;a href=&quot;https://github.com/spring-projects/spring-modulith/issues/578&quot;&gt;GH-578&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Event publication completion now issues a by-id query to significantly improve performance and reduce load on the database (1.3 M2 only). – &lt;a href=&quot;https://github.com/spring-projects/spring-modulith/issues/258&quot;&gt;GH-258&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Minor performance improvements for event completion (all releases). – &lt;a href=&quot;https://github.com/spring-projects/spring-modulith/issues/749&quot;&gt;GH-749&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;For details, please check out the change logs for &lt;a href=&quot;https://github.com/spring-projects/spring-modulith/releases/tag/1.3.0-M2&quot;&gt;1.3 M2&lt;/a&gt;, &lt;a href=&quot;https://github.com/spring-projects/spring-modulith/releases/tag/1.2.3&quot;&gt;1.2.3&lt;/a&gt;, and &lt;a href=&quot;https://github.com/spring-projects/spring-modulith/releases/tag/1.1.8&quot;&gt;1.1.8&lt;/a&gt;. We appreciate any kind of feedback, in particular regarding the milestone release, in the GitHub &lt;a href=&quot;https://github.com/spring-projects/spring-modulith/discussions&quot;&gt;discussions&lt;/a&gt;.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Spring Boot Releases Fix for CVE-2024-38807]]></title><link>https://spring.io/blog/2024/08/23/spring-boot-releases-fix-for-cve-2024-38807</link><guid isPermaLink="true">https://spring.io/blog/2024/08/23/spring-boot-releases-fix-for-cve-2024-38807</guid><dc:creator><![CDATA[Andy Wilkinson]]></dc:creator><pubDate>Fri, 23 Aug 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;The Spring Boot team has released versions 3.2.9 and 3.3.3 that contain fixes for &lt;a href=&quot;https://spring.io/security/cve-2024-38807&quot;&gt;CVE-2024-38807&lt;/a&gt;, Signature Forgery Vulnerability in Spring Boot&apos;s Loader. For &lt;a href=&quot;https://tanzu.vmware.com/spring&quot;&gt;support&lt;/a&gt; customers, 2.7.22, 3.0.17, and 3.1.13 have also been released.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Spring Boot 2.7.21, 3.0.16, and 3.1.13 available now]]></title><link>https://spring.io/blog/2024/08/23/spring-boot-2-7-21-3-0-16-and-3-1-13-available-now</link><guid isPermaLink="true">https://spring.io/blog/2024/08/23/spring-boot-2-7-21-3-0-16-and-3-1-13-available-now</guid><dc:creator><![CDATA[Andy Wilkinson]]></dc:creator><pubDate>Fri, 23 Aug 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;On behalf of the team, I am pleased to announce that Spring Boot 2.7.22, 3.0.17, and 3.1.13 have been released for &lt;a href=&quot;https://tanzu.vmware.com/spring&quot;&gt;support&lt;/a&gt; customers. The releases are available from &lt;a href=&quot;https://packages.broadcom.com&quot;&gt;https://packages.broadcom.com&lt;/a&gt;.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Spring Boot &lt;a href=&quot;https://enterprise.spring.io/projects/spring-boot/changelog/2.7.22&quot;&gt;2.7.22&lt;/a&gt; ships with 17 bug fixes and dependency upgrades.&lt;/li&gt;
-&lt;li&gt;Spring Boot &lt;a href=&quot;https://enterprise.spring.io/projects/spring-boot/changelog/3.0.17&quot;&gt;3.0.17&lt;/a&gt; ships with 35 bug fixes and dependency upgrades.&lt;/li&gt;
-&lt;li&gt;Spring Boot &lt;a href=&quot;https://enterprise.spring.io/projects/spring-boot/changelog/3.1.13&quot;&gt;3.1.13&lt;/a&gt; ships with 46 bug fixes and dependency upgrades.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;The next 2.7.x, 3.0.x, and 3.1.x releases for support customers are planned for 3 months&apos; time.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Structured logging in Spring Boot 3.4]]></title><link>https://spring.io/blog/2024/08/23/structured-logging-in-spring-boot-3-4</link><guid isPermaLink="true">https://spring.io/blog/2024/08/23/structured-logging-in-spring-boot-3-4</guid><dc:creator><![CDATA[Moritz Halbritter]]></dc:creator><pubDate>Fri, 23 Aug 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Logging is a long established part of troubleshooting applications and one of the three pillars of observability, next to metrics and traces. No one likes flying blind in production, and when incidents happen, developers are happy to have log files. Logs are often written out in a human-readable format.&lt;/p&gt;
-&lt;p&gt;Structured logging is a technique where the log output is written in a well-defined, often machine-readable format. This format can be fed into log management systems and enables powerful search and analytics capabilities. One of the most commonly used formats for structured logging is JSON.&lt;/p&gt;
-&lt;p&gt;With Spring Boot 3.4, structured logging is supported out of the box. It supports the &lt;a href=&quot;https://www.elastic.co/guide/en/ecs/8.11/ecs-reference.html&quot;&gt;Elastic Common Schema (ECS)&lt;/a&gt; and &lt;a href=&quot;https://github.com/logfellow/logstash-logback-encoder?tab=readme-ov-file#standard-fields&quot;&gt;Logstash&lt;/a&gt; formats, but it&apos;s also possible to extend it with your own formats.&lt;/p&gt;
-&lt;p&gt;Let&apos;s jump straight in and see how it works!&lt;/p&gt;
-&lt;h2 id=&quot;structured-logging-hello-world&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#structured-logging-hello-world&quot; aria-label=&quot;structured logging hello world permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Structured logging Hello World&lt;/h2&gt;
-&lt;p&gt;Create a new project on &lt;a href=&quot;https://start.spring.io&quot;&gt;start.spring.io&lt;/a&gt;. You don&apos;t need to add any dependencies, but make sure to select at least Spring Boot 3.4.0-M2.&lt;/p&gt;
-&lt;p&gt;To enable structured logging on the console, add this to your &lt;code&gt;application.properties&lt;/code&gt;:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-properties&quot;&gt;logging.structured.format.console=ecs
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;This will instruct Spring Boot to log in the Elastic Common Schema (ECS) format.&lt;/p&gt;
-&lt;p&gt;Now start the application, and you&apos;ll see that the log is formatted in JSON:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-json&quot;&gt;{&quot;@timestamp&quot;:&quot;2024-07-30T08:41:10.561295200Z&quot;,&quot;log.level&quot;:&quot;INFO&quot;,&quot;process.pid&quot;:67455,&quot;process.thread.name&quot;:&quot;main&quot;,&quot;service.name&quot;:&quot;structured-logging-demo&quot;,&quot;log.logger&quot;:&quot;com.example.structured_logging_demo.StructuredLoggingDemoApplication&quot;,&quot;message&quot;:&quot;Started StructuredLoggingDemoApplication in 0.329 seconds (process running for 0.486)&quot;,&quot;ecs.version&quot;:&quot;8.11&quot;}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Quite cool, right? Now let&apos;s dive into the more advanced topics.&lt;/p&gt;
-&lt;h2 id=&quot;structured-logging-to-a-file&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#structured-logging-to-a-file&quot; aria-label=&quot;structured logging to a file permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Structured logging to a file&lt;/h2&gt;
-&lt;p&gt;You can also enable structured logging to a file. This can be used, for example, to print human-readable logs on the console and write structured logs to a file for machine ingestion.&lt;/p&gt;
-&lt;p&gt;To enable that, add this to your &lt;code&gt;application.properties&lt;/code&gt; and make sure to delete the &lt;code&gt;logging.structured.format.console=ecs&lt;/code&gt; setting:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-properties&quot;&gt;logging.structured.format.file=ecs
-logging.file.name=log.json
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Now start your application and you&apos;ll see that there&apos;s human-readable log on the console, and the file &lt;code&gt;log.json&lt;/code&gt; contains machine-readable JSON content.&lt;/p&gt;
-&lt;h2 id=&quot;add-additional-fields&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#add-additional-fields&quot; aria-label=&quot;add additional fields permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Add additional fields&lt;/h2&gt;
-&lt;p&gt;One powerful feature of structured logging is that developers can add information to the log event in a structured way. You can, for example, add the user id to every log event and then later filter on that id to see what this particular user did.&lt;/p&gt;
-&lt;p&gt;Both Elastic Common Schema and Logstash include the content of the &lt;a href=&quot;https://logback.qos.ch/manual/mdc.html&quot;&gt;Mapped Diagnostic Context&lt;/a&gt; in the JSON. To see that in action, let&apos;s create our own log message:&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;SSL Bundle&lt;/code&gt;, that was configured previously, can be obtained from the server factory via its name &lt;code&gt;factory.getSslBundles().getBundle(&quot;server-http3&quot;)&lt;/code&gt;
+and you can configure &lt;code&gt;Http3SslContextSpec&lt;/code&gt;.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;@Component
-class MyLogger implements CommandLineRunner {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MyLogger.class);
+class Http3NettyWebServerCustomizer implements WebServerFactoryCustomizer&amp;#x3C;NettyReactiveWebServerFactory&gt; {
 
     @Override
-    public void run(String... args) {
-        MDC.put(&quot;userId&quot;, &quot;1&quot;);
-        LOGGER.info(&quot;Hello structured logging!&quot;);
-        MDC.remove(&quot;userId&quot;);
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Before logging the log message, this code also sets the user id in the MDC. Spring Boot automatically includes the user id in the JSON:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-json&quot;&gt;{ ... ,&quot;message&quot;:&quot;Hello structured logging!&quot;,&quot;userId&quot;:&quot;1&quot; ... }
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;You can also use the &lt;a href=&quot;https://www.slf4j.org/manual.html#fluent&quot;&gt;fluent logging API&lt;/a&gt; to add additional fields without relying on the MDC:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;@Component
-class MyLogger implements CommandLineRunner {
+    public void customize(NettyReactiveWebServerFactory factory) {
+        factory.addServerCustomizers(server -&gt; {
+            SslBundle sslBundle = factory.getSslBundles().getBundle(&quot;server-http3&quot;);
+            Http3SslContextSpec sslContextSpec =
+                Http3SslContextSpec.forServer(sslBundle.getManagers().getKeyManagerFactory(), sslBundle.getKey().getPassword());
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MyLogger.class);
-
-    @Override
-    public void run(String... args) {
-        LOGGER.atInfo().setMessage(&quot;Hello structured logging!&quot;).addKeyValue(&quot;userId&quot;, &quot;1&quot;).log();
-    }
-
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Elastic Common Schema &lt;a href=&quot;https://www.elastic.co/guide/en/ecs/8.11/ecs-field-reference.html&quot;&gt;defines a lot of field names&lt;/a&gt;, and Spring Boot has built-in support for the service name, the service version, the service environment and the node name. To set values for those fields, you can use the following in your &lt;code&gt;application.properties&lt;/code&gt;:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-properties&quot;&gt;logging.structured.ecs.service.name=MyService
-logging.structured.ecs.service.version=1
-logging.structured.ecs.service.environment=Production
-logging.structured.ecs.service.node-name=Primary
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;When looking at the JSON output, there are now fields for &lt;code&gt;service.name&lt;/code&gt;, &lt;code&gt;service.version&lt;/code&gt;, &lt;code&gt;service.environment&lt;/code&gt; and &lt;code&gt;service.node.name&lt;/code&gt;. With that, you can now filter in your logging system on the node name, service versions, etc.&lt;/p&gt;
-&lt;h2 id=&quot;custom-log-formats&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#custom-log-formats&quot; aria-label=&quot;custom log formats permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Custom log formats&lt;/h2&gt;
-&lt;p&gt;As said above, Spring Boot supports the Elastic Common Schema and Logstash formats out of the box. To add your own format, you have to do the following steps:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Create a custom implementation of the &lt;code&gt;StructuredLogFormatter&lt;/code&gt; interface&lt;/li&gt;
-&lt;li&gt;Reference your custom implementation in the &lt;code&gt;application.properties&lt;/code&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;First, let&apos;s create our own custom implementation:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;class MyStructuredLoggingFormatter implements StructuredLogFormatter&amp;#x3C;ILoggingEvent&gt; {
-
-    @Override
-    public String format(ILoggingEvent event) {
-        return &quot;time=&quot; + event.getTimeStamp() + &quot; level=&quot; + event.getLevel() + &quot; message=&quot; + event.getMessage() + &quot;\n&quot;;
-    }
-
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;As you can see, the structured logging support is not limited to JSON, you can return any &lt;code&gt;String&lt;/code&gt; you want. In this example, we chose to use &lt;code&gt;key=value&lt;/code&gt; pairs.&lt;/p&gt;
-&lt;p&gt;We now need to make Spring Boot aware of our custom implementation. To do that, add this to the &lt;code&gt;application.properties&lt;/code&gt;:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-properties&quot;&gt;logging.structured.format.console=com.example.structured_logging_demo.MyStructuredLoggingFormatter
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;It&apos;s time to start the application and marvel at the log output!&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;time=1722330118045 level=INFO message=Hello structured logging!
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Wow, look at that! What a beautiful piece of log output!&lt;/p&gt;
-&lt;p&gt;If you want to write JSON, there&apos;s a handy new &lt;code&gt;JsonWriter&lt;/code&gt; in Spring Boot 3.4, which you can use:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;class MyStructuredLoggingFormatter implements StructuredLogFormatter&amp;#x3C;ILoggingEvent&gt; {
-
-    private final JsonWriter&amp;#x3C;ILoggingEvent&gt; writer = JsonWriter.&amp;#x3C;ILoggingEvent&gt;of((members) -&gt; {
-        members.add(&quot;time&quot;, (event) -&gt; event.getInstant());
-        members.add(&quot;level&quot;, (event) -&gt; event.getLevel());
-        members.add(&quot;thread&quot;, (event) -&gt; event.getThreadName());
-        members.add(&quot;message&quot;, (event) -&gt; event.getFormattedMessage());
-        members.add(&quot;application&quot;).usingMembers((application) -&gt; {
-            application.add(&quot;name&quot;, &quot;StructuredLoggingDemo&quot;);
-            application.add(&quot;version&quot;, &quot;1.0.0-SNAPSHOT&quot;);
+            return server
+                    // Configure HTTP/3 protocol
+                    .protocol(HttpProtocol.HTTP3)
+                    // Configure HTTP/3 SslContext
+                    .secure(spec -&gt; spec.sslContext(sslContextSpec))
+                    // Configure HTTP/3 settings
+                    .http3Settings(spec -&gt; spec
+                            .idleTimeout(Duration.ofSeconds(5))
+                            .maxData(10_000_000)
+                            .maxStreamDataBidirectionalRemote(1_000_000)
+                            .maxStreamsBidirectional(100));
         });
-        members.add(&quot;node&quot;).usingMembers((node) -&gt; {
-           node.add(&quot;hostname&quot;, &quot;node-1&quot;);
-           node.add(&quot;ip&quot;, &quot;10.0.0.7&quot;);
-        });
-    }).withNewLineAtEnd();
-
-    @Override
-    public String format(ILoggingEvent event) {
-        return this.writer.writeToString(event);
     }
-
 }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&quot;rest-controller&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#rest-controller&quot; aria-label=&quot;rest controller permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;REST Controller&lt;/h3&gt;
+&lt;p&gt;The last thing that you have to add is a simple &lt;code&gt;hello&lt;/code&gt; REST controller. The REST controller does not need any specific &lt;code&gt;HTTP/3&lt;/code&gt; configuration!&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;@RestController
+class Http3Controller {
 
+    @GetMapping(&quot;/hello&quot;)
+    String hello() {
+        return &quot;Hello HTTP/3!&quot;;
+    }
+}
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Of course you can also use any other JSON library (e.g. Jackson) to create the JSON, you don&apos;t have to use the &lt;code&gt;JsonWriter&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;The resulting log message looks something like this:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-json&quot;&gt;{&quot;time&quot;:&quot;2024-07-30T09:14:49.377308361Z&quot;,&quot;level&quot;:&quot;INFO&quot;,&quot;thread&quot;:&quot;main&quot;,&quot;message&quot;:&quot;Hello structured logging!&quot;,&quot;application&quot;:{&quot;name&quot;:&quot;StructuredLoggingDemo&quot;,&quot;version&quot;:&quot;1.0.0-SNAPSHOT&quot;},&quot;node&quot;:{&quot;hostname&quot;:&quot;node-1&quot;,&quot;ip&quot;:&quot;10.0.0.7&quot;}}
+&lt;p&gt;Now you are ready for your first &lt;code&gt;HTTP/3&lt;/code&gt; request:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-shell&quot;&gt;curl --http3 https://localhost:8443/hello --verbose
+* Connected to localhost (::1) port 8443
+* using HTTP/3
+* [HTTP/3] [0] OPENED stream for https://localhost:8443/hello
+* [HTTP/3] [0] [:method: GET]
+* [HTTP/3] [0] [:scheme: https]
+* [HTTP/3] [0] [:authority: localhost:8443]
+* [HTTP/3] [0] [:path: /hello]
+* [HTTP/3] [0] [user-agent: curl]
+* [HTTP/3] [0] [accept: */*]
+&gt; GET /hello HTTP/3
+&gt; Host: localhost:8443
+&gt; User-Agent: curl
+&gt; Accept: */*
+&gt; 
+* Request completely sent off
+&amp;#x3C; HTTP/3 200 
+&amp;#x3C; content-type: text/plain;charset=UTF-8
+&amp;#x3C; content-length: 13
+&amp;#x3C; 
+* Connection #0 to host localhost left intact
+Hello HTTP/3!
 &lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&quot;wrapping-up&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#wrapping-up&quot; aria-label=&quot;wrapping up permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Wrapping up&lt;/h2&gt;
-&lt;p&gt;We hope you like that new feature in Spring Boot 3.4! The &lt;a href=&quot;https://docs.spring.io/spring-boot/3.4-SNAPSHOT/reference/features/logging.html#features.logging.structured&quot;&gt;documentation&lt;/a&gt; has been updated for structured logging, too.&lt;/p&gt;
-&lt;p&gt;Please let us know what you think and if you find any issues, our &lt;a href=&quot;https://github.com/spring-projects/spring-boot/issues&quot;&gt;issue tracker&lt;/a&gt; is always open!&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Spring Boot 3.4.0-M2 available now]]></title><link>https://spring.io/blog/2024/08/23/spring-boot-3-4-0-m2-available-now</link><guid isPermaLink="true">https://spring.io/blog/2024/08/23/spring-boot-3-4-0-m2-available-now</guid><dc:creator><![CDATA[Phil Webb]]></dc:creator><pubDate>Fri, 23 Aug 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;On behalf of the team and everyone who has contributed, I&apos;m happy to announce that Spring Boot &lt;code&gt;3.4.0-M2&lt;/code&gt; has been released and is now available from &lt;a href=&quot;https://repo.spring.io/milestone&quot;&gt;https://repo.spring.io/milestone&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;This release includes &lt;a href=&quot;https://github.com/spring-projects/spring-boot/releases/tag/v3.4.0-M2&quot;&gt;131 enhancements, documentation improvements, dependency upgrades, and bug fixes&lt;/a&gt;. Notable new features include:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/violetagg/spring-webflux-http3&quot;&gt;spring-webflux-http3&lt;/a&gt; repository contains the complete example!&lt;/p&gt;
+&lt;h2 id=&quot;the-client&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#the-client&quot; aria-label=&quot;the client permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;The Client&lt;/h2&gt;
+&lt;p&gt;Configuring the &lt;code&gt;HTTP/3&lt;/code&gt; support for the client is similar to how you configure the server!&lt;/p&gt;
+&lt;p&gt;You need to:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;SSL information and health check actuator&lt;/li&gt;
-&lt;li&gt;Improved Docker support&lt;/li&gt;
-&lt;li&gt;Image Building Support&lt;/li&gt;
+&lt;li&gt;Specify the &lt;a href=&quot;https://projectreactor.io/docs/netty/release/api/reactor/netty/http/HttpProtocol.html#HTTP3&quot;&gt;HTTP/3 protocol&lt;/a&gt;.
+By default, Reactor Netty is configured to support &lt;code&gt;HTTP/1.1&lt;/code&gt;, so you need to change it.&lt;/li&gt;
+&lt;li&gt;Specify the &lt;a href=&quot;https://projectreactor.io/docs/netty/release/api/reactor/netty/http/Http3SettingsSpec.Builder.html&quot;&gt;HTTP/3 settings&lt;/a&gt;.
+By default, Reactor Netty does not provide any settings because those are strongly specific to the application, so you have to configure them: idle timeout, max streams, etc.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;Please see the &lt;a href=&quot;https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.4.0-M2-Release-Notes&quot;&gt;release notes&lt;/a&gt; for more details and upgrade instructions.&lt;/p&gt;
-&lt;p&gt;Thanks to all those who have contributed with issue reports and pull requests.&lt;/p&gt;
-&lt;h3 id=&quot;how-can-you-help&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#how-can-you-help&quot; aria-label=&quot;how can you help permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;How can you help?&lt;/h3&gt;
-&lt;p&gt;If you&apos;re interested in helping out, check out the &lt;a href=&quot;https://github.com/spring-projects/spring-boot/labels/status%3A%20ideal-for-contribution&quot;&gt;&quot;ideal for contribution&quot; tag&lt;/a&gt; in the issue repository. If you have general questions, please ask on &lt;a href=&quot;https://stackoverflow.com&quot;&gt;stackoverflow.com&lt;/a&gt; using the &lt;a href=&quot;https://stackoverflow.com/tags/spring-boot&quot;&gt;&lt;code&gt;spring-boot&lt;/code&gt; tag&lt;/a&gt; or chat with the community on &lt;a href=&quot;https://gitter.im/spring-projects/spring-boot&quot;&gt;Gitter&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;https://spring.io/projects/spring-boot/&quot;&gt;Project Page&lt;/a&gt; | &lt;a href=&quot;https://github.com/spring-projects/spring-boot&quot;&gt;GitHub&lt;/a&gt; | &lt;a href=&quot;https://github.com/spring-projects/spring-boot/issues&quot;&gt;Issues&lt;/a&gt; | &lt;a href=&quot;https://docs.spring.io/spring-boot/docs/3.4.0-M2/reference/html&quot;&gt;Documentation&lt;/a&gt; | &lt;a href=&quot;https://stackoverflow.com/questions/tagged/spring-boot&quot;&gt;Stack Overflow&lt;/a&gt; | &lt;a href=&quot;https://gitter.im/spring-projects/spring-boot&quot;&gt;Gitter&lt;/a&gt;&lt;/p&gt;</content:encoded></item></channel></rss>
+&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;import reactor.netty.http.client.HttpClient;
+
+HttpClient client = HttpClient.create()
+        // Configure HTTP/3 protocol
+        .protocol(HttpProtocol.HTTP3)
+        // Configure HTTP/3 settings
+        .http3Settings(spec -&gt; spec
+                .idleTimeout(Duration.ofSeconds(5))
+                .maxData(10_000_000)
+                .maxStreamDataBidirectionalLocal(1_000_000));
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;By default, the client uses the standard &lt;code&gt;HTTP/3&lt;/code&gt; &lt;code&gt;SSLContext&lt;/code&gt; provided by Reactor Netty.
+However, if you need more specific configuration: truststore, ciphers, etc., you can prepare &lt;code&gt;SSL Bundle&lt;/code&gt; similar to how you prepare it for the server
+and you can configure &lt;code&gt;Http3SslContextSpec&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;SslBundle sslBundle = factory.getSslBundles().getBundle(&quot;client-http3&quot;);
+Http3SslContextSpec sslContextSpec = Http3SslContextSpec.forClient()
+        // Configure TrustStore etc.
+        .configure(...);
+HttpClient client = HttpClient.create()
+        ...
+        // Configure HTTP/3 SslContext
+        .secure(spec -&gt; spec.sslContext(sslContextSpec));
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&quot;webclient&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#webclient&quot; aria-label=&quot;webclient permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;WebClient&lt;/h3&gt;
+&lt;p&gt;You can configure the underlying Reactor Netty &lt;code&gt;HttpClient&lt;/code&gt;, using &lt;code&gt;ReactorClientHttpConnector&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;@Bean
+WebClient http3WebClient(WebClient.Builder builder) {
+    HttpClient client = ...;
+    return builder.clientConnector(new ReactorClientHttpConnector(client)).build();
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&quot;rest-controller-1&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#rest-controller-1&quot; aria-label=&quot;rest controller 1 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;REST Controller&lt;/h4&gt;
+&lt;p&gt;You can create a simple REST controller that makes a remote call utilizing the new &lt;code&gt;HTTP/3&lt;/code&gt; configuration.
+The REST controller does not need any specific &lt;code&gt;HTTP/3&lt;/code&gt; configuration!&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;@RestController
+class Http3Controller {
+
+    private final WebClient http3WebClient;
+
+    Http3Controller(WebClient http3WebClient) {
+        this.http3WebClient = http3WebClient;
+    }
+
+    @GetMapping(&quot;/remote&quot;)
+    Mono&amp;#x3C;String&gt; remote() {
+        return http3WebClient
+                .get()
+                .uri(&quot;https://projectreactor.io/&quot;)
+                .retrieve()
+                .bodyToMono(String.class);
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/violetagg/spring-webflux-http3&quot;&gt;spring-webflux-http3&lt;/a&gt; repository contains the complete example.&lt;/p&gt;
+&lt;h3 id=&quot;restclient&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#restclient&quot; aria-label=&quot;restclient permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;RestClient&lt;/h3&gt;
+&lt;p&gt;You can configure the underlying Reactor Netty &lt;code&gt;HttpClient&lt;/code&gt;, using &lt;code&gt;ReactorNettyClientRequestFactory&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;@Bean
+RestClient http3RestClient(RestClient.Builder builder) {
+	HttpClient client = ...;
+	return builder.requestFactory(new ReactorNettyClientRequestFactory(client)).build();
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&quot;rest-controller-2&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#rest-controller-2&quot; aria-label=&quot;rest controller 2 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;REST Controller&lt;/h4&gt;
+&lt;p&gt;You can create a simple REST controller that makes a remote call utilizing the new &lt;code&gt;HTTP/3&lt;/code&gt; configuration.
+The REST controller does not need any specific &lt;code&gt;HTTP/3&lt;/code&gt; configuration!&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;@RestController
+class Http3Controller {
+
+    private final RestClient http3RestClient;
+
+    Http3Controller(RestClient http3RestClient) {
+        this.http3RestClient = http3RestClient;
+    }
+
+    @GetMapping(&quot;/remote&quot;)
+    String remote() {
+        return http3RestClient
+                .get()
+                .uri(&quot;https://projectreactor.io/&quot;)
+                .retrieve()
+                .body(String.class);
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/violetagg/spring-webmvc-http3&quot;&gt;spring-webmvc-http3&lt;/a&gt; repository contains the complete example.&lt;/p&gt;
+&lt;p&gt;Now you are ready for your first &lt;code&gt;HTTP/3&lt;/code&gt; remote call:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-shell&quot;&gt;curl --http3 https://localhost:8443/remote --verbose
+* Connected to localhost (::1) port 8443
+* using HTTP/3
+* [HTTP/3] [0] OPENED stream for https://localhost:8443/remote
+* [HTTP/3] [0] [:method: GET]
+* [HTTP/3] [0] [:scheme: https]
+* [HTTP/3] [0] [:authority: localhost:8443]
+* [HTTP/3] [0] [:path: /remote]
+* [HTTP/3] [0] [user-agent: curl/8]
+* [HTTP/3] [0] [accept: */*]
+&gt; GET /remote HTTP/3
+&gt; Host: localhost:8443
+&gt; User-Agent: curl/8
+&gt; Accept: */*
+&gt; 
+* Request completely sent off
+&amp;#x3C; HTTP/3 200 
+&amp;#x3C; content-type: text/plain;charset=UTF-8
+&amp;#x3C; content-length: 17138
+...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&quot;spring-cloud-gateway&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#spring-cloud-gateway&quot; aria-label=&quot;spring cloud gateway permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Spring Cloud Gateway&lt;/h3&gt;
+&lt;p&gt;You can configure the underlying Reactor Netty &lt;code&gt;HttpClient&lt;/code&gt;, using &lt;code&gt;HttpClientCustomizer&lt;/code&gt; in Spring Cloud Gateway.
+To use this customizer, you need to register it with the Spring Cloud Gateway configuration.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;@Configuration
+class GatewayConfiguration {
+
+    @Bean
+    HttpClientCustomizer http3HttpClientCustomizer() {
+        return httpClient -&gt;
+                httpClient
+                        // Configure HTTP/3 protocol
+                        .protocol(HttpProtocol.HTTP3)
+                        // Configure HTTP/3 settings
+                        .http3Settings(spec -&gt; spec.idleTimeout(Duration.ofSeconds(5))
+                                .maxData(10_000_000)
+                                .maxStreamDataBidirectionalLocal(1_000_000));
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/violetagg/spring-cloud-gateway-http3&quot;&gt;spring-cloud-gateway-http3&lt;/a&gt; repository contains the complete example.&lt;/p&gt;
+&lt;p&gt;We hope you will enjoy the simplicity of our integration with &lt;code&gt;HTTP/3&lt;/code&gt;. Do reach out in our &lt;a href=&quot;https://github.com/reactor/reactor-netty&quot;&gt;GitHub&lt;/a&gt;/&lt;a href=&quot;https://twitter.com/projectreactor&quot;&gt;Twitter&lt;/a&gt; with feedback!&lt;/p&gt;</content:encoded></item><item><title><![CDATA[This Week in Spring - November 26th, 2024]]></title><link>https://spring.io/blog/2024/11/26/this-week-in-spring-november-26th-2024</link><guid isPermaLink="true">https://spring.io/blog/2024/11/26/this-week-in-spring-november-26th-2024</guid><dc:creator><![CDATA[joshlong]]></dc:creator><pubDate>Tue, 26 Nov 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h1 id=&quot;this-week-in-spring---november-26th-2024&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#this-week-in-spring---november-26th-2024&quot; aria-label=&quot;this week in spring   november 26th 2024 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;This Week in Spring - November 26th, 2024&lt;/h1&gt;
+&lt;p&gt;Hi, Spring fans! Welcome to another installment of &lt;em&gt;This Week in Spring&lt;/em&gt;!&lt;/p&gt;
+&lt;p&gt;Happy Spring Boot 3.4 release month to those who celebrate! And, also, Happy Thanksgiving to those who celebrate! Spring Boot 3.4 brings with it long-anticipated updates to the entire portfolio of Spring projects, and so a lot of the content in this roundup has to do with those releases!&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Starting with an interview with Spring Framework lead Juergen Hoeller &lt;a href=&quot;https://www.infoq.com/news/2024/11/spring-6-2-spring-boot-3-4/&quot;&gt;and Spring Framework contributor Sébastien Deleuze over on InfoQ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Reactor legend Violeta Georgieva has a &lt;a href=&quot;https://spring.io/blog/2024/11/26/http3-in-reactor-2024&quot;&gt;nice post introducing HTTP/3 support in Reactor 2024.0&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;I have thoughts on all the amazing new opportunities in Spring Boot 3.4! Like, 50 pages or so worth. So I wrote them all down and published them as a series of blogs looking at Spring Framework, Spring Data, Spring Batch, Spring Integration, Spring Security, Spring Modulith, and Spring AI. Here&apos;s the &lt;a href=&quot;https://spring.io/blog/2024/11/25/bootiful-34-index&quot;&gt;starting blog post&lt;/a&gt;, which serves as a sort of index for all the other posts.
+&lt;ul&gt;
+&lt;li&gt;And here&apos;s &lt;a href=&quot;https://spring.io/blog/2024/11/24/bootiful-34-framework&quot;&gt;the post on Spring Framework&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;And here&apos;s &lt;a href=&quot;https://spring.io/blog/2024/11/24/bootiful-34-data&quot;&gt;the post on Spring Data&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;And here&apos;s &lt;a href=&quot;https://spring.io/blog/2024/11/24/bootiful-34-batch&quot;&gt;the post on Spring Batch&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;And here&apos;s &lt;a href=&quot;https://spring.io/blog/2024/11/24/bootiful-34-integration&quot;&gt;the post on Spring Integration&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;And here&apos;s &lt;a href=&quot;https://spring.io/blog/2024/11/24/bootiful-34-security&quot;&gt;the post on Spring Security&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;And here&apos;s &lt;a href=&quot;https://spring.io/blog/2024/11/24/bootiful-34-modulith&quot;&gt;the post on Spring Modulith&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;And here&apos;s &lt;a href=&quot;https://spring.io/blog/2024/11/24/bootiful-34-ai&quot;&gt;the post on Spring AI&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;If you want an even better look at Spring Modulith, look no further than this blog &lt;a href=&quot;https://spring.io/blog/2024/11/22/whats-new-in-spring-modulith-1-3&quot;&gt;from Spring Modulith lead Oliver Drotbohm&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Here&apos;s the post announcing that &lt;a href=&quot;https://spring.io/blog/2024/11/22/spring-modulith-1-3-ga-released&quot;&gt;Spring Modulith 1.3 was released&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;In last week’s installment of &lt;em&gt;A Bootiful Podcast&lt;/em&gt;, &lt;a href=&quot;https://spring.io/blog/2024/11/21/a-bootiful-podcast-terence-lee&quot;&gt;I talked to Heroku&apos;s Terence Lee&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;InfoQ&apos;s Michael Redlich does a nice job looking at all that&apos;s &lt;a href=&quot;https://www.infoq.com/news/2024/11/spring-news-roundup-nov18-2024/&quot;&gt;new and novel in the Spring ecosystem in this post, too&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;While it won&apos;t get as much fanfare as Spring Boot 3.4, &lt;a href=&quot;https://spring.io/blog/2024/11/21/spring-boot-2-7-23-3-0-18-and-3-1-14-available-now&quot;&gt;it&apos;s nice to know that Spring Boot 2.7.23, 3.0.18, and 3.1.14 are available now&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/11/21/spring-boot-3-4-0-available-now&quot;&gt;Did I mention that Spring Boot 3.4 is here?&lt;/a&gt; &apos;Cause if not, here&apos;s the blog post announcing it!&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/11/21/spring-cloud-2022-0-9-aka-kilburn-has-been-released&quot;&gt;Spring Cloud 2022.0.9, a.k.a. Kilburn, has been released&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/11/21/spring-boot-3-3-6-available-now&quot;&gt;Spring Boot 3.3.6 is available now&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/11/21/spring-boot-3-2-12-available-now&quot;&gt;Spring Boot 3.2.12 is available now&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/11/20/spring-ai-1-0-0-m4-released&quot;&gt;Spring AI 1.0.0.M4 is available now&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/11/20/spring-batch-5-2-0-goes-ga&quot;&gt;Spring Batch 5.2.0 is GA&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/11/20/spring-integration-6-4-goes-ga&quot;&gt;Spring Integration 6.4 is GA&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/11/19/spring-authorization-server-1-4-goes-ga&quot;&gt;Spring Authorization Server 1.4 is GA&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/11/19/spring-for-apache-kafka-3-3-0-3-2-5-and-3-1-10-available-now&quot;&gt;Spring for Apache Kafka 3.3.0, 3.2.5, and 3.1.10 are available now&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;By the way, have you checked &lt;a href=&quot;https://x.com/marcushellberg/status/1860029888553685383?s=12&quot;&gt;out Thomas Vitale&apos;s awesome directory of examples for Spring AI&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;I love this article on &lt;a href=&quot;https://www.infoq.com/articles/reactive-notification-system-server-sent-events/&quot;&gt;real-time notifications with server-sent events and Spring!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Wim Deblauwe has a nice post on &lt;a href=&quot;https://www.wimdeblauwe.com/blog/2024/11/19/redirect-attributes-with-spring-mvc-and-htmx/&quot;&gt;sending redirect attributes with Spring MVC and HTMX&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;The Trifork blog has a nice discussion &lt;a href=&quot;https://trifork.nl/blog/spring-boot-observability-metrics-tuning/&quot;&gt;on tuning observability metrics in Spring Boot&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/lutzh/awesome-event-driven-architecture&quot;&gt;This resource is an awesome compendium of other resources related to event-driven architecture, also worth a read&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;A ton of resources to keep you company after the turkey&apos;s started to kick in!&lt;/p&gt;
+&lt;p&gt;I am sure I speak for the entire Spring team when I say: we are thankful for you, dear reader!&lt;/p&gt;
+&lt;p&gt;Happy Thanksgiving!&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Bootiful Spring Boot 3.4: Start Here]]></title><link>https://spring.io/blog/2024/11/25/bootiful-34-index</link><guid isPermaLink="true">https://spring.io/blog/2024/11/25/bootiful-34-index</guid><dc:creator><![CDATA[joshlong]]></dc:creator><pubDate>Mon, 25 Nov 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Hi, Spring fans! And happy Spring Boot 3.4 release to those who celebrate!&lt;/p&gt;
+&lt;p&gt;I know, I know what you&apos;re thinking: Josh, Spring Boot 3.4 already shipped! I know it. Spring Boot 3.4 dropped a week earlier this year! In the last couple of years, we’ve  released Spring Boot on the same day as Thanksgiving Day in the USA, which is tedious for us here in the United States because it requires more preparation. This year, it’s a week early! Why do I mention this? Well, I’ve had some time already - before Thanksgiving, even - to explore the fantastic possibilities unlocked by using Spring Boot 3.4. While I&apos;ve also played with it plenty over the last six months, it was super satisfying to go to the &lt;a href=&quot;https://start.spring.io&quot;&gt;Spring Initializr&lt;/a&gt;, add a few dependencies, and get a working build with no modifications required to work with the versions of the dependencies. It all just comes together so nicely!  There are a ton of features, it&apos;s just absolutely brimming with them. It&apos;s &lt;em&gt;stuffed&lt;/em&gt;, you might say, like that turkey I&apos;ll be eating in a few short days!&lt;/p&gt;
+&lt;p&gt;Spring Boot delivers value on its own, of course, but it’s also the premier vehicle by which to consume the rest of the Spring portfolio. As always, this release includes dependency updates, fixes for CVEs, and tons of new features. And there’s an implied support timeline. Did you know that we only support open-source releases of Spring Boot for about a year? So, if you’re using Spring Boot 3.2, you need to upgrade to Spring Boot 3.3 because 3.2 is now out of open-source support. If you want to know where you stand, please check &lt;a href=&quot;https://spring.io/projects/spring-boot#support&quot;&gt;each project’s support pages&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;We’re in the waning days of the Spring Boot 3.x and Spring Framework 6.x generation. But sometime next year, we’ll see Spring Boot 4.x and Spring Framework 7.x! So make sure you’re staying upgraded and handling whatever deprecations result.&lt;/p&gt;
+&lt;p&gt;When you upgrade to a new version of Spring Boot, you get all the work the entire Spring team has done over the last six months. It’s a massive undertaking and integration, and we do it for you like clockwork every six months. I don&apos;t foolishly hope to give you a sense of all the new and novel features. I can’t. It would take the next six months to chronicle this release effectively. So, instead, I’m going to take a different tack, looking at some of the high-level features and focusing, perhaps, on one or two of them across some (but still not all!) of the new released projects in Spring Boot 3.4.&lt;/p&gt;
+&lt;p&gt;OK? OK. Let’s dive right into it. We’ll work our way through the stack starting at the level of Spring Framework, on top of which absolutely everything else builds, and then ultimately getting to projects like Spring Modulith and Spring AI, which build on top of Spring Boot.&lt;/p&gt;
+&lt;p&gt;Here are all the installments:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/11/24/bootiful-34-framework&quot;&gt;Spring Framework&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/11/24/bootiful-34-data&quot;&gt;Spring Data&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/11/24/bootiful-34-batch&quot;&gt;Spring Batch&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/11/24/bootiful-34-integration&quot;&gt;Spring Integration&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/11/24/bootiful-34-security&quot;&gt;Spring Security&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/11/24/bootiful-34-boot&quot;&gt;Spring Boot&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/11/24/bootiful-34-modulith&quot;&gt;Spring Modulith&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/11/24/bootiful-34-ai&quot;&gt;Spring AI&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;spring-ai&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#spring-ai&quot; aria-label=&quot;spring ai permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Spring AI&lt;/h2&gt;</content:encoded></item><item><title><![CDATA[Bootiful Spring Boot 3.4: Spring AI]]></title><link>https://spring.io/blog/2024/11/24/bootiful-34-ai</link><guid isPermaLink="true">https://spring.io/blog/2024/11/24/bootiful-34-ai</guid><dc:creator><![CDATA[joshlong]]></dc:creator><pubDate>Sun, 24 Nov 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;I love Spring AI. It’s an amazing project designed to bring the patterns and practices of AI engineering to the Spring Boot developer. It’s got clean idiomatic abstractions that’ll make any Sring developer feel right at home, and it has a ton of integrations with all manner of different vector stores, embedding models, transcription models, image modes, and chat models.&lt;/p&gt;
+&lt;p&gt;The new release, &lt;a href=&quot;https://spring.io/blog/2024/11/20/spring-ai-1-0-0-m4-released&quot;&gt;m4&lt;/a&gt;, builds upon Spring Boot 3.4 and adds a ton of new features. As usual, I can’t hope to look at all the new features, but the release notes do an exquisite job.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;there’s new Amazon Bedrock Convertse support&lt;/li&gt;
+&lt;li&gt;there’s been a ton of work done to support more expressive function calling, both in Java and  Kotlin&lt;/li&gt;
+&lt;li&gt;there’s the first cut of support for the ideas taking shape in the AI community around &quot;advanced and modular RAG&quot;. RAG, of course, is retrieval augmented generation and refers to using data from a system or service to inform the response generated by a chat model. These ideas are articulated in &lt;a href=&quot;https://export.arxiv.org/abs/2407.21059&quot;&gt;this paepr&lt;/a&gt; and &lt;a href=&quot;https://arxiv.org/abs/2312.10997&quot;&gt;this one&lt;/a&gt;, and the building blocks are taking root in this new release. Amazing!&lt;/li&gt;
+&lt;li&gt;updates across the board to various vector store integrations and chat models&lt;/li&gt;
+&lt;li&gt;there’s&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/chat/comparison.html&quot;&gt;aeven a comprehensive chat model comparison&lt;/a&gt; page in the documentation&lt;/li&gt;
+&lt;li&gt;vector storage and embedding improvements, including enhancements to vector stores like Azure and Milvus&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The evolving nature of the functional callback support has so enamored me. Spring AI aims to make connecting your AI models with your data and business logic easy. Remember: the name of the game here is integration. Most people aren’t going to build their models. They’re going to integrate existing ones into their business logic and services. And where does all that stuff live? In Spring, of course. Spring AI is a natural! And it keeps getting easier. In this release, there’s new support for describing and then letting models invoke functions if they decide they’ve got the need to do so.&lt;/p&gt;
+&lt;p&gt;Here’s a simple example demonstrating the definition of a &lt;code&gt;FunctionCallback&lt;/code&gt;  and the Spring AI &lt;code&gt;ChatClient,&lt;/code&gt; which is your first port of call for all interactions with a Sprign AI  &lt;code&gt;ChatModel.&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;package com.example.bootiful_34.ai;
+
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.model.function.FunctionCallback;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+class AiConfiguration {
+
+	@Bean
+	ChatClient chatClient(ChatClient.Builder builder, FunctionCallback weatherFunctionCallback) {
+		return builder.defaultFunctions(weatherFunctionCallback).build();
+	}
+
+	@Bean
+	FunctionCallback weatherFunctionCallback() {
+		return FunctionCallback.builder()
+			.description(&quot;returns the weather for a given city&quot;)
+			.function(&quot;getCurrentWeatherForACity&quot;,
+					(WeatherRequest wr) -&gt; new WeatherResponse(wr.city(),
+							wr.city().equalsIgnoreCase(&quot;san francisco&quot;) ? 68.0f : 72.0f))
+			.inputType(WeatherRequest.class)
+			.build();
+	}
+
+}
+
+record WeatherRequest(String city) {
+}
+
+record WeatherResponse(String city, float temperature) {
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;It’s a pretty trivial example: given a &lt;code&gt;WeatherRequest&lt;/code&gt; specifying a city, we make up and return some temperature. In this case, I’ve got a hardcoded case for San Francisco.&lt;/p&gt;
+&lt;p&gt;We put all of this to work in the test, knowing that the model won’t know the current weather in a given city, and so we will have to defer to a function that we provide. It knows about the nature of the function because we’ve given it a description when we configured the FunctionCallback&lt;code&gt;. It knows that the city parameter is  &lt;/code&gt;String&lt;code&gt;and that San Francisco is a city, so it passes the string&lt;/code&gt;San Francisco` to our function, allowing us to provide the expected response. We verify as much with the test, asserting that the response is the hardcoded magic number.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;package com.example.bootiful_34.ai;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class AiConfigurationTest {
+
+	@Test
+	void functionCallbacks(@Autowired ChatClient cc) {
+		var weatherInSf = cc.prompt(&quot;give me the weather for the city of san francisco&quot;).call().content();
+		Assertions.assertNotNull(weatherInSf);
+		Assertions.assertTrue(weatherInSf.contains(&quot;68&quot;));
+	}
+
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;And just like that, we’ve given our AI model the ability to ask questions about our systems and services and to support a more agentic workflow.  Easy!&lt;/p&gt;</content:encoded></item></channel></rss>
